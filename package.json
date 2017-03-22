@@ -19,6 +19,7 @@
   "dependencies": {
     "async": "^2.1.5",
     "cheerio": "^0.22.0",
+    "encoding": "^0.1.12",
     "lodash": "^4.17.4",
     "moment-timezone": "^0.5.11",
     "superagent": "^3.5.2"
