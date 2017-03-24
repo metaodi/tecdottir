@@ -1,0 +1,80 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: tecdottir
+# during dev, should point to your local machine
+#host: localhost:10010
+host: tecdottir.herokuapps.com
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /measurements/{station}:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: scraper
+    get:
+      description: Returns the measurements values of the specified station
+      # used as the method name of the controller
+      operationId: measurements
+      parameters:
+        - name: station
+          in: path
+          description: The station of which the values should be returned
+          required: true
+          type: string
+          enum: ["tiefenbrunnen", "mythenquai"]
+        - name: startDate
+          in: query
+          description: The start date after which the measurements should be returned
+          required: false
+          type: string
+        - name: endDate
+          in: query
+          description: The end date before which the measurements should be returned
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/MeasurementResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  MeasurementResponse:
+    required:
+      - ok
+      - result
+    properties:
+      ok:
+        type: boolean
+      result:
+        type: array
+        items:
+          type: object
+  ErrorResponse:
+    required:
+      - ok
+      - message
+    properties:
+      ok:
+        type: boolean
+      message:
+        type: string

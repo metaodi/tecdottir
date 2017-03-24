@@ -4,21 +4,34 @@ var Request = require('superagent');
 var Cheerio = require('cheerio');
 var Encoding = require("encoding");
 var _ = require('lodash');
-var Express = require('express');
 
-var app = Express()
+exports.getMeasurements = getMeasurements;
+exports.measurements = measurements;
 
-app.get('/', function (req, res) {
-    res.send('Hello World!')
-})
+function measurements(req, res) {
+  var station = req.swagger.params.station.value;
+  var startDate = req.swagger.params.startDate.value || Moment();
+  var endDate = req.swagger.params.endDate.value || Moment();
 
-var port = process.env.PORT || 3000;
-app.listen(port, function () {
-    console.log('Example app listening on port ' + port + '!')
-})
+  getMeasurements(station, startDate, endDate, function(err, values) {
+      var result;
+      if (err) {
+          result = {
+              ok: false,
+              message: err
+          };
+      } else {
+          result = {
+              ok: true,
+              result: values
+          };
+      }
+    
+      res.json(result);
+  });
+}
 
-
-function getMeasurements(startDate, endDate) {
+function getMeasurements(station, startDate, endDate, callback) {
     var startDateObj = Moment(startDate);
     var endDateObj = Moment(endDate);
 
@@ -29,7 +42,7 @@ function getMeasurements(startDate, endDate) {
         .send({'messw_beg': startDateObj.format('DD.MM.YYYY')})
         .send({'messw_end': endDateObj.format('DD.MM.YYYY')})
         .send({'auswahl': 2})
-        .send({'combilog': 'tiefenbrunnen'})
+        .send({'combilog': station})
         .end(function(err, res) {
             if (err) {
                 console.log('Tecson returned an error: ' + err);
@@ -71,12 +84,20 @@ function getMeasurements(startDate, endDate) {
                             "value": valueText,
                             "unit": headers[i].unit
                         };
+                    }).get();
+                    console.log(valueSet);
+                    console.log(valueSet['Datum / Uhrzeit (MEZ)']);
+                    console.log(valueSet['Datum / Uhrzeit (MEZ)'].value);
+                    values.push({
+                        station: station,
+                        timestamp: Moment(valueSet['Datum / Uhrzeit (MEZ)'].value, 'DD.MM.YYYY HH:mm:ss').toISOString(),
+                        values: valueSet
                     });
-                    values.push(valueSet);
-                });
+                }).get();
                 console.log(headers);
                 console.log(values);
             });
+            callback(null, values);
 
         });
 }

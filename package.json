@@ -2,9 +2,10 @@
   "name": "tecdottir",
   "version": "0.0.1",
   "description": "API wrapper to get tecson measurements",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "swagger project test"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,11 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.11",
-    "superagent": "^3.5.2"
+    "superagent": "^3.5.2",
+    "swagger-express-mw": "^0.1.0"
+  },
+  "devDependencies": {
+    "should": "^11.2.1",
+    "supertest": "^3.0.0"
   }
 }
