@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/metaodi/tecdottir.svg?branch=master)](https://travis-ci.org/metaodi/tecdottir)
+
 # tecdottir
 
 This is a project to get measurements from tecson meteo stations.
