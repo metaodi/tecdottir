@@ -45,7 +45,7 @@ function getMeasurements(station, startDate, endDate, callback) {
         .send({'combilog': station})
         .end(function(err, res) {
             if (err) {
-                console.log('Tecson returned an error: ' + err);
+                callback('Tecson returned an error: ' + err);
                 return;
             }
             // when responseType is set to 'blob' res.body is a buffer containing the content
@@ -85,17 +85,12 @@ function getMeasurements(station, startDate, endDate, callback) {
                             "unit": headers[i].unit
                         };
                     }).get();
-                    console.log(valueSet);
-                    console.log(valueSet['Datum / Uhrzeit (MEZ)']);
-                    console.log(valueSet['Datum / Uhrzeit (MEZ)'].value);
                     values.push({
                         station: station,
                         timestamp: Moment(valueSet['Datum / Uhrzeit (MEZ)'].value, 'DD.MM.YYYY HH:mm:ss').toISOString(),
                         values: valueSet
                     });
                 }).get();
-                console.log(headers);
-                console.log(values);
             });
             callback(null, values);
 
