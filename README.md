@@ -35,3 +35,11 @@ To start the server use:
 ```bash
 swagger project start
 ```
+
+## Tests
+
+To run the tests, use the following command:
+
+```bash
+npm test
+```
