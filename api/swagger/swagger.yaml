@@ -35,12 +35,12 @@ paths:
           enum: ["tiefenbrunnen", "mythenquai"]
         - name: startDate
           in: query
-          description: The start date after which the measurements should be returned
+          description: "The start date after which the measurements should be returned. Format: YYYY-MM-DD"
           required: false
           type: string
         - name: endDate
           in: query
-          description: The end date before which the measurements should be returned
+          description: "The end date before which the measurements should be returned. Format: YYYY-MM-DD"
           required: false
           type: string
       responses:

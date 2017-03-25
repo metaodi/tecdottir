@@ -16,7 +16,13 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   // add swagger ui
   var swaggerUi = swaggerExpress.runner.swaggerTools.swaggerUi();
+  swaggerUi.docExpansion = "full";
   app.use(swaggerUi);
+  
+  //redirect root to /docs
+  app.get('/', function (req, res) {
+    res.redirect('/docs')
+  })
 
   var port = process.env.PORT || 10010;
   app.listen(port);
