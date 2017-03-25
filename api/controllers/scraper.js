@@ -36,15 +36,16 @@ function getMeasurements(station, startDate, endDate, callback) {
     var endDateObj = Moment(endDate);
 
     Request
-        .post('https://www.tecson-data.ch/zurich/tiefenbrunnen/uebersicht/messwerte.php')
+        .post('https://www.tecson-data.ch/zurich/' + station + '/uebersicht/messwerte.php')
         .type('form')
-        .responseType('blob')
         .send({'messw_beg': startDateObj.format('DD.MM.YYYY')})
         .send({'messw_end': endDateObj.format('DD.MM.YYYY')})
         .send({'auswahl': 2})
         .send({'combilog': station})
+        .responseType('blob')
         .end(function(err, res) {
             if (err) {
+                console.log("ERROR: ", err);
                 callback('Tecson returned an error: ' + err);
                 return;
             }
@@ -93,6 +94,5 @@ function getMeasurements(station, startDate, endDate, callback) {
                 }).get();
             });
             callback(null, values);
-
         });
 }
