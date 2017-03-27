@@ -18,11 +18,13 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
 
   // add swagger ui
+  var swaggerDocument = swaggerExpress.runner.swagger;
   var options = {
-      docExpansion: "full"
+      docExpansion: "full",
+      url: "http://" + swaggerDocument.host + "/swagger"
   };
   var customCss = '#header { display: none }';
-  app.use('/docs', SwaggerUi.serve, SwaggerUi.setup(swaggerExpress.runner.swagger, false, options, customCss));
+  app.use('/docs', SwaggerUi.serve, SwaggerUi.setup(swaggerDocument, false, options, customCss));
  
   //redirect root to /docs
   app.get('/', function (req, res) {
