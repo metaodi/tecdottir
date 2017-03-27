@@ -26,7 +26,8 @@
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.11",
     "superagent": "^3.5.2",
-    "swagger-express-mw": "^0.1.0"
+    "swagger-express-mw": "^0.1.0",
+    "swagger-ui-express": "https://github.com/metaodi/swagger-ui-express/tarball/allow-custom-css"
   },
   "devDependencies": {
     "nock": "^9.0.9",

@@ -1,7 +1,9 @@
 'use strict';
 
 var SwaggerExpress = require('swagger-express-mw');
+var SwaggerUi = require('swagger-ui-express');
 var app = require('express')();
+
 module.exports = app; // for testing
 
 var config = {
@@ -14,11 +16,14 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   // install middleware
   swaggerExpress.register(app);
 
+
   // add swagger ui
-  var swaggerUi = swaggerExpress.runner.swaggerTools.swaggerUi();
-  swaggerUi.docExpansion = "full";
-  app.use(swaggerUi);
-  
+  var options = {
+      docExpansion: "full"
+  };
+  var customCss = '#header { display: none }';
+  app.use('/docs', SwaggerUi.serve, SwaggerUi.setup(swaggerExpress.runner.swagger, false, options, customCss));
+ 
   //redirect root to /docs
   app.get('/', function (req, res) {
     res.redirect('/docs')
