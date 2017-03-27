@@ -3,8 +3,8 @@ info:
   version: "0.0.1"
   title: tecdottir
 # during dev, should point to your local machine
-#host: localhost:10010
-host: tecdottir.herokuapp.com
+host: localhost:10010
+#host: tecdottir.herokuapp.com
 # basePath prefixes all resource paths 
 basePath: /
 # 
@@ -38,17 +38,19 @@ paths:
           description: "The start date after which the measurements should be returned. Format: YYYY-MM-DD"
           required: false
           type: string
+          format: date
         - name: endDate
           in: query
           description: "The end date before which the measurements should be returned. Format: YYYY-MM-DD"
           required: false
           type: string
+          format: date
       responses:
         "200":
           description: Success
           schema:
             # a pointer to a definition
-            $ref: "#/definitions/MeasurementResponse"
+            $ref: "#/definitions/MeasurementApiResponse"
         # responses may fall through to errors
         default:
           description: Error
@@ -60,6 +62,119 @@ paths:
 definitions:
   MeasurementResponse:
     required:
+      - station
+      - timestamp
+      - values
+    properties:
+       station:
+           type: string
+       timestamp:
+         type: string
+         format: date-time
+       values:
+         $ref: "#/definitions/Measurement"
+  Measurement:
+    properties:
+      timestamp_cet:
+        type: object
+        properties:
+          value:
+            type: string
+          unit:
+            type: string
+      air_temperature:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+      water_temperature:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+      wind_gust_max_10min:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+      wind_speed_avg_10min:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+      wind_force_avg_10min:
+        type: object
+        properties:
+          value:
+            type: integer
+          unit:
+            type: string
+      wind_direction:
+        type: object
+        properties:
+          value:
+            type: integer
+          unit:
+            type: string
+      windchill:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+      barometric_pressure_qfe:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+      percipitation:
+        type: object
+        properties:
+          value:
+            type: integer
+          unit:
+            type: string
+      dew_point:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+      global_radiation:
+        type: object
+        properties:
+          value:
+            type: integer
+          unit:
+            type: string
+      humidity:
+        type: object
+        properties:
+          value:
+            type: integer
+          unit:
+            type: string
+      water_level:
+        type: object
+        properties:
+          value:
+            type: number
+          unit:
+            type: string
+  MeasurementApiResponse:
+    required:
       - ok
       - result
     properties:
@@ -68,7 +183,7 @@ definitions:
       result:
         type: array
         items:
-          type: object
+          $ref: "#/definitions/MeasurementResponse"
   ErrorResponse:
     required:
       - ok
