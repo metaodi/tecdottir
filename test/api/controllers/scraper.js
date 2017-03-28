@@ -176,5 +176,28 @@ describe('controllers', function() {
                   });
             });
         });
+        describe('GET /stations', function() {
+
+            it('should return a valid JSON response', function(done) {
+                request(server)
+                  .get('/stations')
+                  .set('Accept', 'application/json')
+                  .expect('Content-Type', /json/)
+                  .expect(200)
+                  .end(function(err, res) {
+                    should.not.exist(err);
+
+                    res.body.should.not.be.empty;
+                    res.body.ok.should.be.true;
+                    res.body.result.length.should.equal(2); 
+
+                    var firstResult = res.body.result[0];
+                    firstResult.slug.should.equal('tiefenbrunnen');
+                    firstResult.title.should.equal('Tiefenbrunnen');
+
+                    done();
+                  });
+            });
+        });
     });
 });

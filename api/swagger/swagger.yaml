@@ -1,13 +1,14 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: tecdottir
-# during dev, should point to your local machine
-#host: localhost:10010
+  title: Tecdottir
+  description: This API returns data of the Tecson meteo station placed at Tiefenbrunnen and Mythenquai water police station.
+  license:
+      name: MIT License, © Stefan Oderbolz 2017
+      url: https://github.com/metaodi/tecdottir/blob/master/LICENSE.md
 host: tecdottir.herokuapp.com
 # basePath prefixes all resource paths 
 basePath: /
-# 
 schemes:
   - https
 # format of bodies a client can send (Content-Type)
@@ -16,11 +17,16 @@ consumes:
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+tags:
+  -
+    name: measurements
+    description: Measurement data
 paths:
   /measurements/{station}:
-    # binds a127 app logic to a route
     x-swagger-router-controller: scraper
     get:
+      tags:
+        - measurements
       description: Returns the measurements values of the specified station
       # used as the method name of the controller
       operationId: measurements
@@ -49,6 +55,25 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/MeasurementApiResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /stations:
+    x-swagger-router-controller: scraper
+    get:
+      tags:
+        - measurements
+      description: Returns the available stations
+      # used as the method name of the controller
+      operationId: stations
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/StationApiResponse"
         # responses may fall through to errors
         default:
           description: Error
@@ -182,6 +207,26 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/MeasurementResponse"
+  StationApiResponse:
+    required:
+      - ok
+      - result
+    properties:
+      ok:
+        type: boolean
+      result:
+        type: array
+        items:
+          $ref: "#/definitions/Station"
+  Station:
+    required:
+      - slug
+      - title
+    properties:
+      slug:
+        type: string
+      title:
+        type: string
   ErrorResponse:
     required:
       - ok

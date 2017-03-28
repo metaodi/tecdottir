@@ -7,6 +7,7 @@ var _ = require('lodash');
 
 exports.getMeasurements = getMeasurements;
 exports.measurements = measurements;
+exports.stations = stations;
 
 var keyMapping = {
     'Datum / Uhrzeit (MEZ)': {
@@ -157,6 +158,23 @@ function getMeasurements(station, startDate, endDate, callback) {
             });
             callback(null, values);
         });
+}
+
+function stations(req, res) {
+    var result = {
+        ok: true,
+        result: [
+            {
+                slug: 'tiefenbrunnen', 
+                title: 'Tiefenbrunnen'
+            },
+            {
+                slug: 'mythenquai',
+                title: 'Mythenquai'
+            }
+        ]
+    };
+    res.json(result);
 }
 
 function configFor(title, keyMapping) {
