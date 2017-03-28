@@ -26,12 +26,20 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         url: "http://" + swaggerDocument.host + "/swagger"
     };
     var customCss = '#header { display: none }';
-    app.use('/docs', SwaggerUi.serve, SwaggerUi.setup(swaggerDocument, false, options, customCss));
+    app.use('/docs', SwaggerUi.serve, function (req, res) {
+        // override config for localhost
+        if (req.get('Host').includes('localhost')) {
+            swaggerDocument.host = 'localhost:10010';
+            swaggerDocument.schemes = ['http'];
+        }
+        var handler = SwaggerUi.setup(swaggerDocument, false, options, customCss);
+        handler(req, res);
+    });
     
     //redirect to https
     app.use(function(req, res, next) {
         console.log(req.get('Host'));
-        if (!req.secure && req.get('Host') != 'localhost:10010') {
+        if (!req.secure && !req.get('Host').includes('localhost')) {
             return res.redirect(['https://', req.get('Host'), req.url].join(''));
         }
         next();
