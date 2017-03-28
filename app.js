@@ -39,10 +39,12 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     
     //redirect to https
     app.use(function(req, res, next) {
-        if (!req.secure && !req.get('Host').includes('localhost') && !req.get('Host').includes('127.0.0.1')) {
+        var isLocal = (req.get('Host').includes('localhost') || req.get('Host').includes('localhost'));
+        if (req.secure || isLocal) {
+            next();
+        } else {
             return res.redirect(['https://', req.get('Host'), req.url].join(''));
         }
-        next();
     });
    
     //redirect root to /docs
