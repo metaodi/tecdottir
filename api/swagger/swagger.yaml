@@ -23,7 +23,7 @@ tags:
     description: Measurement data
 paths:
   /measurements/{station}:
-    x-swagger-router-controller: scraper
+    x-swagger-router-controller: measurement
     get:
       tags:
         - measurements
@@ -61,7 +61,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   /stations:
-    x-swagger-router-controller: scraper
+    x-swagger-router-controller: measurement
     get:
       tags:
         - measurements

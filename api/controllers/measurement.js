@@ -5,7 +5,6 @@ var Cheerio = require('cheerio');
 var Encoding = require("encoding");
 var _ = require('lodash');
 
-exports.getMeasurements = getMeasurements;
 exports.measurements = measurements;
 exports.stations = stations;
 
@@ -74,7 +73,7 @@ function measurements(req, res) {
   var startDate = req.swagger.params.startDate.value || Moment().toISOString();
   var endDate = req.swagger.params.endDate.value || Moment().toISOString();
 
-  getMeasurements(station, startDate, endDate, function(err, values) {
+  scrape(station, startDate, endDate, function(err, values) {
       var result;
       if (err) {
           result = {
@@ -93,7 +92,7 @@ function measurements(req, res) {
 }
 
 
-function getMeasurements(station, startDate, endDate, callback) {
+function scrape(station, startDate, endDate, callback) {
     var startDateObj = Moment(startDate).tz('Europe/Zurich');
     var endDateObj = Moment(endDate).tz('Europe/Zurich');
 
