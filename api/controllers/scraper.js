@@ -1,4 +1,4 @@
-var Moment = require('moment');
+var Moment = require('moment-timezone');
 var Async = require('async');
 var Request = require('superagent');
 var Cheerio = require('cheerio');
@@ -70,8 +70,8 @@ var keyMapping = {
 
 function measurements(req, res) {
   var station = req.swagger.params.station.value;
-  var startDate = req.swagger.params.startDate.value || Moment();
-  var endDate = req.swagger.params.endDate.value || Moment();
+  var startDate = req.swagger.params.startDate.value || Moment().toISOString();
+  var endDate = req.swagger.params.endDate.value || Moment().toISOString();
 
   getMeasurements(station, startDate, endDate, function(err, values) {
       var result;
@@ -93,8 +93,8 @@ function measurements(req, res) {
 
 
 function getMeasurements(station, startDate, endDate, callback) {
-    var startDateObj = Moment(startDate);
-    var endDateObj = Moment(endDate);
+    var startDateObj = Moment(startDate).tz('Europe/Zurich');
+    var endDateObj = Moment(endDate).tz('Europe/Zurich');
 
     Request
         .post('https://www.tecson-data.ch/zurich/' + station + '/uebersicht/messwerte.php')
@@ -150,7 +150,7 @@ function getMeasurements(station, startDate, endDate, callback) {
                     }).get();
                     values.push({
                         station: station,
-                        timestamp: Moment(valueSet['timestamp_cet'].value, 'DD.MM.YYYY HH:mm:ss').toISOString(),
+                        timestamp: Moment.tz(valueSet['timestamp_cet'].value, 'DD.MM.YYYY HH:mm:ss', 'Europe/Zurich').toISOString(),
                         values: valueSet
                     });
                 }).get();
