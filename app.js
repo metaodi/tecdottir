@@ -39,7 +39,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     
     //redirect to https
     app.use(function(req, res, next) {
-        var isLocal = (req.get('Host').includes('localhost') || req.get('Host').includes('localhost'));
+        var isLocal = (req.get('Host').includes('localhost') || req.get('Host').includes('127.0.0.1'));
         if (req.secure || isLocal) {
             next();
         } else {
