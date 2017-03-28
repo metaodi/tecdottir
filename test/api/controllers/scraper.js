@@ -114,6 +114,9 @@ describe('controllers', function() {
                     firstResult.values.dew_point.value.should.equal(7.6);
                     firstResult.values.dew_point.unit.should.equal('°C');
 
+                    should.not.exist(firstResult.values.water_level);
+                    should.not.exist(firstResult.values.global_radiation);
+
                     done();
                   });
             });

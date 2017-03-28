@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - 4.0.0
 before_script:
-- npm install -g swagger
+- npm install -g https://github.com/swagger-api/swagger-node # this is needed as the currently release 0.7.5 does not return the correct error code when the tests fail
 script:
 - npm test
 sudo: false

@@ -23,7 +23,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     var swaggerDocument = swaggerExpress.runner.swagger;
     var options = {
         docExpansion: "full",
-        url: "http://" + swaggerDocument.host + "/swagger"
+        url: "https://" + swaggerDocument.host + "/swagger"
     };
     var customCss = '#header { display: none }';
     app.use('/docs', SwaggerUi.serve, function (req, res) {
@@ -31,6 +31,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         if (req.get('Host').includes('localhost')) {
             swaggerDocument.host = 'localhost:10010';
             swaggerDocument.schemes = ['http'];
+            options.url = 'http://localhost:10010/swagger';
         }
         var handler = SwaggerUi.setup(swaggerDocument, false, options, customCss);
         handler(req, res);
@@ -38,8 +39,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     
     //redirect to https
     app.use(function(req, res, next) {
-        console.log(req.get('Host'));
-        if (!req.secure && !req.get('Host').includes('localhost')) {
+        if (!req.secure && !req.get('Host').includes('localhost') && !req.get('Host').includes('127.0.0.1')) {
             return res.redirect(['https://', req.get('Host'), req.url].join(''));
         }
         next();
@@ -53,6 +53,4 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   
     var port = process.env.PORT || 10010;
     app.listen(port);
-  
-    console.log('try this:\ncurl http://' + swaggerDocument.host + '/measurements');
 });
