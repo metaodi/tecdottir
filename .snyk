@@ -1,0 +1,8 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.3
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:extend:20180424':
+    - swagger-express-mw > swagger-node-runner > swagger-tools > superagent > extend:
+        patched: '2019-01-09T06:07:12.547Z'
