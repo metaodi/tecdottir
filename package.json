@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "swagger project test"
+    "test": "swagger project test",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -27,7 +29,8 @@
     "moment-timezone": "^0.5.11",
     "superagent": "^3.5.2",
     "swagger-express-mw": "^0.1.0",
-    "swagger-ui-express": "^1.0.6"
+    "swagger-ui-express": "^1.0.6",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "nock": "^9.0.9",
@@ -36,5 +39,6 @@
   },
   "engines": {
     "node": ">=4.8.4"
-  }
+  },
+  "snyk": true
 }
