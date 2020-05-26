@@ -42,5 +42,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         res.redirect('/docs')
     })
   
-    app.listen(port);
+    //this is needed to avoid EADDRINUSE errors
+    //see http://www.marcusoft.net/2015/10/eaddrinuse-when-watching-tests-with-mocha-and-supertest.html
+    if(!module.parent) {
+        app.listen(port);
+    }
 });
