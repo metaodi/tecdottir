@@ -18,7 +18,6 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     // install middleware
     swaggerExpress.register(app);
   
-  
     // add swagger ui
     var swaggerDocument = swaggerExpress.runner.swagger;
     var options = {
@@ -26,12 +25,13 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         url: "https://" + swaggerDocument.host + "/swagger"
     };
     var customCss = '#header { display: none }';
+    var port = process.env.PORT || 10010;
     app.use('/docs', SwaggerUi.serve, function (req, res) {
         // override config for localhost
         if (req.get('Host').includes('localhost')) {
-            swaggerDocument.host = 'localhost:10010';
+            swaggerDocument.host = `localhost:${port}`;
             swaggerDocument.schemes = ['http'];
-            options.url = 'http://localhost:10010/swagger';
+            options.url = `http://localhost:${port}/swagger`;
         }
         var handler = SwaggerUi.setup(swaggerDocument, false, options, customCss);
         handler(req, res);
@@ -42,7 +42,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         res.redirect('/docs')
     })
   
-  
-    var port = process.env.PORT || 10010;
-    app.listen(port);
+    //this is needed to avoid EADDRINUSE errors
+    //see http://www.marcusoft.net/2015/10/eaddrinuse-when-watching-tests-with-mocha-and-supertest.html
+    if(!module.parent) {
+        app.listen(port);
+    }
 });

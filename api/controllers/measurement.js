@@ -21,6 +21,10 @@ var keyMapping = {
         label: 'water_temperature',
         parseFn: parseFloat
     },
+    'Wassertemp. (DEFEKT)': {
+        label: 'water_temperature',
+        parseFn: parseFloat,
+    },
     'Windböen (max) 10 min.': {
         label: 'wind_gust_max_10min',
         parseFn: parseFloat
@@ -143,9 +147,11 @@ function scrape(station, startDate, endDate, callback) {
                     $(row).find('td').each(function(i, elem) {
                         var valueText = $(this).find('span').text();
                         var config = configFor(headers[i].text, keyMapping);
+                        var statusRe = new RegExp('DEFEKT', 'i')
                         valueSet[config.label] = {
                             "value": config.parseFn(valueText),
-                            "unit": headers[i].unit
+                            "unit": headers[i].unit,
+                            "status": (statusRe.test(headers[i].text) ? "broken" : "ok")
                         };
                     }).get();
                     values.push({
