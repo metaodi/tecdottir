@@ -4,7 +4,8 @@ node_js:
 - "8"
 - "10"
 before_script:
-- npm install -g swagger-node 
+# this is needed as the current release returns the wrong error code
+- npm install -g https://github.com/swagger-api/swagger-node 
 script:
 - npm test
 sudo: false
