@@ -25,12 +25,13 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         url: "https://" + swaggerDocument.host + "/swagger"
     };
     var customCss = '#header { display: none }';
+    var port = process.env.PORT || 10010;
     app.use('/docs', SwaggerUi.serve, function (req, res) {
         // override config for localhost
         if (req.get('Host').includes('localhost')) {
-            swaggerDocument.host = 'localhost:10010';
+            swaggerDocument.host = `localhost:${port}`;
             swaggerDocument.schemes = ['http'];
-            options.url = 'http://localhost:10010/swagger';
+            options.url = `http://localhost:${port}/swagger`;
         }
         var handler = SwaggerUi.setup(swaggerDocument, false, options, customCss);
         handler(req, res);
@@ -41,7 +42,5 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         res.redirect('/docs')
     })
   
-  
-    var port = process.env.PORT || 10010;
     app.listen(port);
 });
