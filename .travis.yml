@@ -1,17 +1,28 @@
 language: node_js
+
 node_js:
-- "node"
 - "8"
 - "10"
+- "12"
+- "node"
+
 before_script:
 # this is needed as the current release returns the wrong error code
 - npm install -g https://github.com/swagger-api/swagger-node 
+
 script:
 - npm test
+
 sudo: false
+
 deploy:
   provider: heroku
   app: tecdottir
   skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
+    node_js: 12
+    repo: metaodi/tecdottir
   api_key:
     secure: tJylt/Cewpz6imrrhlmgNTxft4vy9qyqt4XHFMBwBpq4CMWA5+jaFVs+pZMWpJkm54R6kvJeimiBoei6mrqV+W1dj6TjDGk8cDT2aNVxahAw/7bWlwlsXnRnJYLbHQ+jOno7c9DhNuKVCf+Ze0Qx9SxTWHqVXBoQPNZnKYVZ9eeCWFXxNserHSAK1UbfYvt1oafOQFMJkk9gOn3ruQo2LCnVMfdrBzpNqSAiDQZh1pb8fvpfRshRZRBxnVSC3Nyk4sXRNw9aLUL+E/21j+T+hfUHqkyBv4DV4iA+k+NGCg4WeDMvomNQEcmIFMt/BdZ97/iPpExhitnduy/KbSqj9z5MFai5spBXzMG6nNDXeof0OpcN5nz25ny/WfwR3KztCu/J5u6PwjqADqeR1rcARHF5pwdbmEkj1P+MAjG8MZdba1eBBa9x1DKvCNB5yueXmak9o5C6zdbw1KnN1FoZNrNAES6hGj6xkgEt5oupHXwV2DyjYca4PaMvTVpPL5X45mQVBj3UiVc6ljzQwd+QY1GY1wl2maHbU/mjFMjpweEZVMoBPdFQixBtpdnEJdEGJuMwvy8UvvMtWvS4QNaJBMJd9WNwvAL7upweMylwlJzXc2Di+0qjSb14xwbfF8IfyKa0f9oR6vD16FnN0MAN5otGl+XzVxvGypuqRCNwr/Q=
