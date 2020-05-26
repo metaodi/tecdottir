@@ -13,6 +13,14 @@ The data is unfortunately not available in a machine-readable form, but there is
 
 tecdottir is an API based on this form and HTML table.
 
+## Showcases
+
+Projects based on this API are shown.
+
+* [**Zürichhorn**](https://editioneffet.ch/03069/zuerichhorn.html): map of Zürichhorn with temperature and wind by [Markus Steiger](https://github.com/01241)
+
+(if you want on the list, create an issue or PR to add your project)
+
 ## Development
 
 We use `swagger` to document the API.
