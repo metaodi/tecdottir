@@ -66,6 +66,44 @@ describe('controllers', function() {
                   });
             });
 
+            it('tiefenbrunnen should return status = broken for water_temperature', function(done) {
+                // setup reqeust mock
+                var content = fs.readFileSync('./test/api/controllers/tiefenbrunnen-fixture-2020-05-25.html');
+                var scope = nock('https://www.tecson-data.ch')
+                				.post('/zurich/tiefenbrunnen/uebersicht/messwerte.php')
+                				.reply(200, content);
+
+                request(server)
+                  .get('/measurements/tiefenbrunnen')
+                  .set('Accept', 'application/json')
+                  .expect('Content-Type', /json/)
+                  .expect(200)
+                  .end(function(err, res) {
+                    should.not.exist(err);
+
+                    res.body.should.not.be.empty;
+                    res.body.ok.should.be.true;
+                    res.body.result.length.should.equal(139); 
+
+                    var firstResult = res.body.result[0];
+                    var keys = Object.keys(firstResult.values);
+                    firstResult.station.should.equal('tiefenbrunnen');
+                    firstResult.timestamp.should.equal('2020-05-24T22:00:00.000Z');
+                    keys.length.should.equal(11);
+
+                    firstResult.values.timestamp_cet.value.should.equal('25.05.2020 00:00:00');
+                    firstResult.values.timestamp_cet.unit.should.be.empty;
+                    firstResult.values.air_temperature.value.should.equal(13.5);
+                    firstResult.values.air_temperature.unit.should.equal('°C');
+                    firstResult.values.air_temperature.status.should.equal('ok');
+                    firstResult.values.water_temperature.value.should.equal(17.8);
+                    firstResult.values.water_temperature.unit.should.equal('°C');
+                    firstResult.values.water_temperature.status.should.equal('broken');
+
+                    done();
+                  });
+            });
+
             it('tiefenbrunnen should return a valid JSON response', function(done) {
                 // setup reqeust mock
                 var content = fs.readFileSync('./test/api/controllers/tiefenbrunnen-fixture-2017-03-24.html');

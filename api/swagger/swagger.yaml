@@ -1,10 +1,10 @@
 swagger: "2.0"
 info:
-  version: "0.0.1"
+  version: "0.0.2"
   title: Tecdottir
   description: This API returns data of the Tecson meteo station placed at Tiefenbrunnen and Mythenquai water police station.
   license:
-      name: MIT License, © Stefan Oderbolz 2017
+      name: MIT License, © Stefan Oderbolz 2020
       url: https://github.com/metaodi/tecdottir/blob/master/LICENSE.md
 host: tecdottir.herokuapp.com
 # basePath prefixes all resource paths 
@@ -103,99 +103,183 @@ definitions:
         properties:
           value:
             type: string
+            description: The date value in CET timezone
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       air_temperature:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       water_temperature:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       wind_gust_max_10min:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       wind_speed_avg_10min:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       wind_force_avg_10min:
         type: object
         properties:
           value:
             type: integer
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       wind_direction:
         type: object
         properties:
           value:
             type: integer
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       windchill:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       barometric_pressure_qfe:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       percipitation:
         type: object
         properties:
           value:
             type: integer
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       dew_point:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       global_radiation:
         type: object
         properties:
           value:
             type: integer
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       humidity:
         type: object
         properties:
           value:
             type: integer
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
       water_level:
         type: object
         properties:
           value:
             type: number
+            description: The value of the measurement
           unit:
             type: string
+            description: The unit of the measurement
+          status:
+            type: string
+            description: Indicates wheter the measurement is currently broken or not
+            enum: [ok, broken]
   MeasurementApiResponse:
     required:
       - ok
