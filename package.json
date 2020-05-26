@@ -18,21 +18,21 @@
   },
   "homepage": "https://github.com/metaodi/tecdottir#readme",
   "dependencies": {
-    "async": "^2.1.5",
+    "async": "^3.2.0",
     "cheerio": "^0.22.0",
     "encoding": "^0.1.12",
-    "express": "^4.15.2",
-    "lodash": "^4.17.4",
-    "moment": "^2.18.1",
-    "moment-timezone": "^0.5.11",
-    "superagent": "^3.5.2",
-    "swagger-express-mw": "^0.1.0",
-    "swagger-ui-express": "^1.0.6"
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.26.0",
+    "moment-timezone": "^0.5.31",
+    "superagent": "^5.2.2",
+    "swagger-express-mw": "^0.7.0",
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
-    "nock": "^9.0.9",
-    "should": "^11.2.1",
-    "supertest": "^3.0.0"
+    "nock": "^12.0.3",
+    "should": "^13.2.3",
+    "supertest": "^4.0.2"
   },
   "engines": {
     "node": ">=4.8.4"
