@@ -1,6 +1,6 @@
 {
   "name": "tecdottir",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "API wrapper to get tecson measurements",
   "main": "app.js",
   "scripts": {
@@ -35,6 +35,6 @@
     "supertest": "^4.0.2"
   },
   "engines": {
-    "node": ">=4.8.4"
+    "node": ">=8.10.0"
   }
 }
