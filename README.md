@@ -51,3 +51,10 @@ To run the tests, use the following command:
 ```bash
 npm test
 ```
+
+## Create a new release
+
+1. Update the version number in `package.json` and `api/swagger/swagger.yaml`
+1. Push code to GitHub
+1. Create a new release on GitHub
+1. Wait for the GitHub Action to deploy the app to heroku
