@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/metaodi/tecdottir.svg?branch=master)](https://travis-ci.org/metaodi/tecdottir)
+[![Build Status](https://github.com/metaodi/tecdottir/actions/workflows/build.yml/badge.svg)](https://github.com/metaodi/tecdottir/actions/workflows/build.yml)
 
 # tecdottir
 
