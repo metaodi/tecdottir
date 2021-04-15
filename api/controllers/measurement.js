@@ -100,6 +100,16 @@ function scrape(station, startDate, endDate, callback) {
     var startDateObj = Moment(startDate).tz('Europe/Zurich');
     var endDateObj = Moment(endDate).tz('Europe/Zurich');
 
+    // check if the timespan is too long
+    // since we run into memory errors otherwise
+    var days = Math.abs(endDateObj.diff(startDateObj, 'days'));
+    console.log("Requested time period (in days):", days);
+    var maxDays = 60;
+    if (days > maxDays) {
+        callback('Time period too long (' + days + ' days), please request a shorter time period (max: ' + maxDays + ' days)');
+        return;
+    }
+
     Request
         .post('https://www.tecson-data.ch/zurich/' + station + '/uebersicht/messwerte.php')
         .type('form')
