@@ -23,7 +23,7 @@
     "encoding": "^0.1.13",
     "express": "^4.17.1",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.33",
     "superagent": "^6.1.0",
     "swagger-express-mw": "^0.7.0",
