@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/metaodi/tecdottir#readme",
   "dependencies": {
-    "async": "^3.2.0",
+    "async": "^3.2.2",
     "cheerio": "^0.22.0",
     "encoding": "^0.1.13",
     "express": "^4.17.1",
