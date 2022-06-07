@@ -58,7 +58,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/tecdottir/compare/v0.0.6...HEAD
+[Unreleased]: https://github.com/metaodi/tecdottir/compare/v0.0.7...HEAD
+[0.0.6]: https://github.com/metaodi/tecdottir/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/metaodi/tecdottir/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/metaodi/tecdottir/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/metaodi/tecdottir/compare/v0.0.3...v0.0.4
