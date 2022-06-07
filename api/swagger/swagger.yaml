@@ -1,10 +1,10 @@
 swagger: "2.0"
 info:
-  version: "0.0.6"
+  version: "0.0.7"
   title: Tecdottir
   description: This API returns data of the Tecson meteo station placed at Tiefenbrunnen and Mythenquai water police station.
   license:
-      name: MIT License, © Stefan Oderbolz 2021
+      name: MIT License, © Stefan Oderbolz 2022
       url: https://github.com/metaodi/tecdottir/blob/master/LICENSE.md
 host: tecdottir.herokuapp.com
 # basePath prefixes all resource paths 
