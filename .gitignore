@@ -27,3 +27,13 @@ node_modules
 
 # Runtime configuration for swagger app
 config/runtime.yaml
+
+# python stuff
+.pyc
+pyenv
+
+# Data
+*.csv
+
+# config
+.env

@@ -6,6 +6,7 @@ Usage:
   update_database.py --file <path-to-csv> --table <table-name> [--purge]
   update_database.py (-h | --help)
   update_database.py --version
+
 Options:
   -h, --help                Show this screen.
   --version                 Show version.
@@ -19,38 +20,76 @@ import datetime
 import csv
 import sys
 import os
-from docopt import docopt
+import traceback
 import psycopg2
+from docopt import docopt
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 arguments = docopt(__doc__, version='Update database with CSV file 1.0')
+
+
+def create_table(cur, table, purge):
+    cur.execute(f"""
+    CREATE TABLE IF NOT EXISTS {table} (
+        timestamp_utc text,
+        timestamp_cet text,
+        air_temperature text,
+        water_temperature text,
+        wind_gust_max_10min text,
+        wind_speed_avg_10min text,
+        wind_force_avg_10min text,
+        wind_direction text,
+        windchill text,
+        barometric_pressure_qfe text,
+        precipitation text,
+        dew_point text,
+        global_radiation text,
+        humidity text,
+        water_level text
+    );
+    """)
+    if purge:
+        cur.execute(f"TRUNCATE {table};")
+
+
+def load_csv(cur, path, table):
+    with open(path, 'r') as f:
+        next(f) # Skip the header row.
+        cur.copy_from(f, table, sep=',')
+
 
 try:
     DB_URL = os.getenv('DATABASE_URL')
+    if not DB_URL:
+        raise Exception("DATABASE_URL not provided")
     print("Import database")
     
     # read database connection url from the enivron variable we just set.
-    DATABASE_URL = os.environ.get('DATABASE_URL')
     con = None
     try:
-        # create a new database connection by calling the connect() function
-        con = psycopg2.connect(DB_URL)
-    
-        #  create a new cursor
+        conn = psycopg2.connect(DB_URL)
         cur = conn.cursor()
-        
-        # execute an SQL statement to get the HerokuPostgres database version
+
+        # print database info
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')
-    
-        # display the PostgreSQL database server version
         db_version = cur.fetchone()
         print(db_version)
-           
-         # close the communication with the HerokuPostgres
+
+        # create tables
+        create_table(cur, arguments['--table'], arguments['--purge'])
+        conn.commit()
+        
+        # load csvs
+        load_csv(cur, arguments['--file'], arguments['--table'])
+        conn.commit()
+        
         cur.close()
     finally:
         # close the communication with the database server by calling the close()
-        if con is not None:
-            con.close()
+        if conn is not None:
+            conn.close()
             print('Database connection closed.')
 except Exception as e:
     print("Error: %s" % e, file=sys.stderr)
