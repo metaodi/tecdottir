@@ -51,8 +51,8 @@ def create_table(cur, table, purge):
         water_level text
     );
     """)
-    cur.execute(f"CREATE INDEX idx_timestamp_utc on {table}(timestamp_utc);")
-    cur.execute(f"CREATE INDEX idx_timestamp_cet on {table}(timestamp_cet);")
+    cur.execute(f"CREATE INDEX IF NOT EXISTS idx_timestamp_utc on {table}(timestamp_utc);")
+    cur.execute(f"CREATE INDEX IF NOT EXISTS idx_timestamp_cet on {table}(timestamp_cet);")
 
 
 def load_csv(cur, path, table):
