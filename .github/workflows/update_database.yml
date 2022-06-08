@@ -41,6 +41,6 @@ jobs:
         DATABASE_URL: ${{steps.db.outputs.db_url}}
       run: |
         python update_database.py -f messwerte_mythenquai_2022.csv -t mythenquai --purge
-        #python update_database.py -f messwerte_mythenquai_2007-2021.csv -t mythenquai 
+        python update_database.py -f messwerte_mythenquai_2007-2021.csv -t mythenquai 
         python update_database.py -f messwerte_tiefenbrunnen_2022.csv -t tiefenbrunnen --purge
-        #python update_database.py -f messwerte_tiefenbrunnen_2007-2021.csv -t tiefenbrunnen
+        python update_database.py -f messwerte_tiefenbrunnen_2007-2021.csv -t tiefenbrunnen
