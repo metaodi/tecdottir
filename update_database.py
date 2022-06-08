@@ -34,8 +34,8 @@ def create_table(cur, table, purge):
         cur.execute(f"DROP TABLE IF EXISTS {table}")
     cur.execute(f"""
     CREATE TABLE IF NOT EXISTS {table} (
-        timestamp_utc text,
-        timestamp_cet text,
+        timestamp_utc timestamptz,
+        timestamp_cet timestamptz,
         air_temperature text,
         water_temperature text,
         wind_gust_max_10min text,
@@ -51,6 +51,8 @@ def create_table(cur, table, purge):
         water_level text
     );
     """)
+    cur.execute(f"CREATE INDEX idx_timestamp_utc on {table}(timestamp_utc);")
+    cur.execute(f"CREATE INDEX idx_timestamp_cet on {table}(timestamp_cet);")
 
 
 def load_csv(cur, path, table):
