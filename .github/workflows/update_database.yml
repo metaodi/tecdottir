@@ -21,7 +21,16 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        sudo apt-get install sqlite3
+    - uses: akhileshns/heroku-deploy@v3.6.8
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
+        justlogin: true
+    - name: Get DATABASE_URL
+      id: db
+      run: echo "::set-output name=db_url:$(heroku config:get DATABASE_URL -a tecdottir)"
         
     - name: Update database
+      env:
+        DATABASE_URL: ${{steps.db.outputs.db_url}}
       run: python update_database.py
