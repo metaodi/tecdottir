@@ -30,6 +30,8 @@ arguments = docopt(__doc__, version='Update database with CSV file 1.0')
 
 
 def create_table(cur, table, purge):
+    if purge:
+        cur.execute(f"DROP TABLE IF EXISTS {table}")
     cur.execute(f"""
     CREATE TABLE IF NOT EXISTS {table} (
         timestamp_utc text,
@@ -49,8 +51,6 @@ def create_table(cur, table, purge):
         water_level text
     );
     """)
-    if purge:
-        cur.execute(f"TRUNCATE {table};")
 
 
 def load_csv(cur, path, table):
