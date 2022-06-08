@@ -3,13 +3,14 @@
 """Update the database with a CSV file
 
 Usage:
-  update_database.py --file <path-to-csv> [--purge]
+  update_database.py --file <path-to-csv> --table <table-name> [--purge]
   update_database.py (-h | --help)
   update_database.py --version
 Options:
   -h, --help                Show this screen.
   --version                 Show version.
   -f, --file <path-to-csv>  Path to the CSV file.
+  -t, --table <table-name>  Name of the database table to import the data into.
   -p, --purge               Purge the database before import the CSV.
 """
 
