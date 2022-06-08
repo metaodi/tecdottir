@@ -29,7 +29,9 @@ jobs:
         
     - name: Get DATABASE_URL
       id: db
-      run: echo "::set-output name=db_url::$(heroku config:get DATABASE_URL -a tecdottir)"
+      run: |
+        heroku ps -a tecdottir
+        echo "::set-output name=db_url::$(heroku config:get DATABASE_URL -a tecdottir)"
       
     - name: Download CSVs
       run: ./download_csvs.sh
