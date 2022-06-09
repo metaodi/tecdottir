@@ -81,10 +81,11 @@ try:
 
         # create tables
         create_table(cur, arguments['--table'], arguments['--purge'])
-        conn.commit()
         
         # load csvs
         load_csv(cur, arguments['--file'], arguments['--table'])
+
+        # commit changes
         conn.commit()
         
         cur.close()
