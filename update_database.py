@@ -34,21 +34,21 @@ def create_table(cur, table, purge):
         cur.execute(f"DROP TABLE IF EXISTS {table}")
     cur.execute(f"""
     CREATE TABLE IF NOT EXISTS {table} (
-        timestamp_utc timestamptz,
-        timestamp_cet timestamptz,
-        air_temperature text,
-        water_temperature text,
-        wind_gust_max_10min text,
-        wind_speed_avg_10min text,
-        wind_force_avg_10min text,
-        wind_direction text,
+        timestamp_utc timestamptz with time zone UTC,
+        timestamp_cet timestamptz with time zone 'Europe/Zurich',
+        air_temperature float,
+        water_temperature float,
+        wind_gust_max_10min float,
+        wind_speed_avg_10min float,
+        wind_force_avg_10min float,
+        wind_direction int,
         windchill text,
-        barometric_pressure_qfe text,
-        precipitation text,
-        dew_point text,
-        global_radiation text,
-        humidity text,
-        water_level text
+        barometric_pressure_qfe float,
+        precipitation float,
+        dew_point float,
+        global_radiation int,
+        humidity float,
+        water_level float
     );
     """)
     cur.execute(f"CREATE INDEX IF NOT EXISTS idx_timestamp_utc on {table}(timestamp_utc);")
