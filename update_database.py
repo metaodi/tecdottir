@@ -3,7 +3,7 @@
 """Update the database with a CSV file
 
 Usage:
-  update_database.py --file <path-to-csv> --table <table-name> [--purge]
+  update_database.py --file <path-to-csv> --table <table-name> [--purge] [--drop]
   update_database.py (-h | --help)
   update_database.py --version
 
@@ -13,6 +13,7 @@ Options:
   -f, --file <path-to-csv>  Path to the CSV file.
   -t, --table <table-name>  Name of the database table to import the data into.
   -p, --purge               Purge the database before import the CSV.
+  -d, --drop                Drop the database table before import the CSV.
 """
 
 
@@ -29,8 +30,8 @@ load_dotenv(find_dotenv())
 arguments = docopt(__doc__, version='Update database with CSV file 1.0')
 
 
-def create_table(cur, table, purge):
-    if purge:
+def create_table(cur, table, purge, drop):
+    if drop:
         cur.execute(f"DROP TABLE IF EXISTS {table}")
     cur.execute(f"""
     CREATE TABLE IF NOT EXISTS {table} (
@@ -53,6 +54,9 @@ def create_table(cur, table, purge):
     """)
     cur.execute(f"CREATE INDEX IF NOT EXISTS idx_timestamp_utc on {table}(timestamp_utc);")
     cur.execute(f"CREATE INDEX IF NOT EXISTS idx_timestamp_cet on {table}(timestamp_cet);")
+    if purge:
+        cur.execute(f"TRUNCATE {table};")
+
 
 
 def load_csv(cur, path, table):
@@ -80,7 +84,7 @@ try:
         print(db_version)
 
         # create tables
-        create_table(cur, arguments['--table'], arguments['--purge'])
+        create_table(cur, arguments['--table'], arguments['--purge'], arguments['--drop'])
         
         # load csvs
         load_csv(cur, arguments['--file'], arguments['--table'])
