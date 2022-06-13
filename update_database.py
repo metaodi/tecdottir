@@ -35,8 +35,8 @@ def create_table(cur, table, purge, drop):
         cur.execute(f"DROP TABLE IF EXISTS {table}")
     cur.execute(f"""
     CREATE TABLE IF NOT EXISTS {table} (
-        timestamp_utc timestamptz with time zone UTC,
-        timestamp_cet timestamptz with time zone 'Europe/Zurich',
+        timestamp_utc timestamptz at time zone UTC,
+        timestamp_cet timestamptz at time zone 'Europe/Zurich',
         air_temperature float,
         water_temperature float,
         wind_gust_max_10min float,
