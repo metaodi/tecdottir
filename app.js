@@ -22,6 +22,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     var swaggerDocument = swaggerExpress.runner.swagger;
     var options = {
         docExpansion: "full",
+        tryItOutEnabled: true,
         url: "https://" + swaggerDocument.host + "/swagger"
     };
     var customCss = '#header { display: none }';
