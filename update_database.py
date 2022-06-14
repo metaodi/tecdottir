@@ -32,7 +32,7 @@ arguments = docopt(__doc__, version='Update database with CSV file 1.0')
 
 def create_table(cur, table, purge, drop):
     if drop:
-        cur.execute(f"DROP TABLE IF EXISTS {table}")
+        cur.execute(f"DROP TABLE IF EXISTS {table};")
     cur.execute(f"""
     CREATE TABLE IF NOT EXISTS {table} (
         timestamp_utc timestamptz,
@@ -62,7 +62,7 @@ def create_table(cur, table, purge, drop):
 def load_csv(cur, path, table):
     with open(path, 'r') as f:
         next(f) # Skip the header row.
-        cur.copy_from(f, table, sep=',')
+        cur.copy_from(f, table, sep=',', null='""')
 
 
 try:
