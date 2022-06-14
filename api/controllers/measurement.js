@@ -1,178 +1,132 @@
-var Moment = require('moment-timezone');
-var Async = require('async');
-var Request = require('superagent');
-var Cheerio = require('cheerio');
-var Encoding = require("encoding");
-var _ = require('lodash');
+const _ = require('lodash');
+const Moment = require('moment-timezone');
+const { Pool, Client } = require('pg')
+const result = require('dotenv').config()
+
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
+// the pool with emit an error on behalf of any idle clients
+// it contains if a backend error or network partition happens
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err) // your callback here
+  process.exit(-1)
+})
 
 exports.measurements = measurements;
 exports.stations = stations;
 
 var keyMapping = {
-    'Datum / Uhrzeit (MEZ)': {
-        label: 'timestamp_cet',
-        parseFn: _.identity
+    'timestamp_cet': {
+        unit: '',
+        parseFn: (v) => Moment(v).tz('Europe/Zurich').format()
     },
-    'Lufttemperatur': {
-        label: 'air_temperature',
+    'air_temperature': {
+        unit: '°C',
         parseFn: parseFloat
     },
-    'Wassertemperatur': {
-        label: 'water_temperature',
+    'water_temperature': {
+        unit: '°C',
         parseFn: parseFloat
     },
-    'Wassertemp. (DEFEKT)': {
-        label: 'water_temperature',
-        parseFn: parseFloat,
-    },
-    'Windböen (max) 10 min.': {
-        label: 'wind_gust_max_10min',
+    'wind_gust_max_10min': {
+        unit: 'm/s',
         parseFn: parseFloat
     },
-    'Windgeschw. Ø 10min.': {
-        label: 'wind_speed_avg_10min',
+    'wind_speed_avg_10min': {
+        unit: 'm/s',
         parseFn: parseFloat
     },
-    'Windstärke Ø 10 min.': {
-        label: 'wind_force_avg_10min',
-        parseFn: parseInt,
+    'wind_force_avg_10min': {
+        unit: 'bft',
+        parseFn: parseFloat
     },
-    'Windrichtung': {
-        label: 'wind_direction',
+    'wind_direction': {
+        unit: '°',
         parseFn: parseInt
     },
-    'Windchill': {
-        label: 'windchill',
+    'windchill': {
+        unit: '°C',
         parseFn: parseFloat
     },
-    'Luftdruck QFE': {
-        label: 'barometric_pressure_qfe',
+    'barometric_pressure_qfe': {
+        unit: 'hPa',
         parseFn: parseFloat
     },
-    'Niederschlag': {
-        label: 'precipitation',
-        parseFn: parseInt
-    },
-    'Taupunkt': {
-        label: 'dew_point',
+    'precipitation': {
+        unit: 'mm',
         parseFn: parseFloat
     },
-    'Globalstrahlung': {
-        label: 'global_radiation',
+    'dew_point': {
+        unit: '°C',
+        parseFn: parseFloat
+    },
+    'global_radiation': {
+        unit: 'W/m²',
         parseFn: parseInt
     },
-    'Luftfeuchte': {
-        label: 'humidity',
-        parseFn: parseInt
+    'humidity': {
+        unit: '%',
+        parseFn: parseFloat
     },
-    'Pegel': {
-        label: 'water_level',
+    'water_level': {
+        unit: 'm',
         parseFn: parseFloat
     }
-    
 };
 
 function measurements(req, res) {
   var station = req.swagger.params.station.value;
   var startDate = req.swagger.params.startDate.value || Moment().toISOString();
-  var endDate = req.swagger.params.endDate.value || Moment().toISOString();
+  var endDate = req.swagger.params.endDate.value || Moment().add(1, 'days').toISOString();
 
-  scrape(station, startDate, endDate, function(err, values) {
-      var result;
-      if (err) {
-          result = {
-              ok: false,
-              message: err
-          };
-      } else {
-          result = {
-              ok: true,
-              result: values
-          };
-      }
-    
-      res.json(result);
-  });
-}
+  var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
+  var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
 
-
-function scrape(station, startDate, endDate, callback) {
-    var startDateObj = Moment(startDate).tz('Europe/Zurich');
-    var endDateObj = Moment(endDate).tz('Europe/Zurich');
-
-    // check if the timespan is too long
-    // since we run into memory errors otherwise
-    var days = Math.abs(endDateObj.diff(startDateObj, 'days'));
-    console.log("Requested time period (in days):", days);
-    var maxDays = 60;
-    if (days > maxDays) {
-        callback('Time period too long (' + days + ' days), please request a shorter time period (max: ' + maxDays + ' days)');
-        return;
-    }
-
-    Request
-        .post('https://www.tecson-data.ch/zurich/' + station + '/uebersicht/messwerte.php')
-        .type('form')
-        .send({'messw_beg': startDateObj.format('DD.MM.YYYY')})
-        .send({'messw_end': endDateObj.format('DD.MM.YYYY')})
-        .send({'auswahl': 2})
-        .send({'combilog': station})
-        .responseType('blob')
-        .end(function(err, res) {
-            if (err) {
-                console.log("ERROR: ", err);
-                callback('Tecson returned an error: ' + err);
-                return;
-            }
-            // when responseType is set to 'blob' res.body is a buffer containing the content
-            // the content is ISO-8859-1 encoded, we convert it to UTF-8
-            var contentBuffer = Encoding.convert(res.body, 'utf8', 'latin1');
-            var $ = Cheerio.load(contentBuffer);
-
-            var headers = [];
-            var values = [];
-            $('table').eq(1).filter(function() {
-                var table = $(this);
-                var rows = table.find('tr');
-
-                //extract the headers
-                $(rows[0]).find('td').each(function(i, elem) {
-                    var headerText = $(this).find('span').eq(0).text();
-                    var unitText = $(this).find('span').eq(1).text();
-                    headers.push(
-                        {
-                            'text': headerText,
-                            'unit': unitText.trim().replace(/[\(\)]/g, '')
-                        }
-                    );
-                });
-                
-                //remove the header row from rows
-                rows.splice(0, 1);
-
-                //extract the values
-                $(rows).each(function(i, elem) {
-                    var row = $(this);
-                    var valueSet = {};
-                    $(row).find('td').each(function(i, elem) {
-                        var valueText = $(this).find('span').text();
-                        var config = configFor(headers[i].text, keyMapping);
-                        var statusRe = new RegExp('DEFEKT', 'i')
-                        valueSet[config.label] = {
-                            "value": config.parseFn(valueText),
-                            "unit": headers[i].unit,
-                            "status": (statusRe.test(headers[i].text) ? "broken" : "ok")
-                        };
-                    }).get();
-                    values.push({
-                        station: station,
-                        timestamp: Moment.tz(valueSet['timestamp_cet'].value, 'DD.MM.YYYY HH:mm:ss', 'Europe/Zurich').toISOString(),
-                        values: valueSet
-                    });
-                }).get();
-            });
-            callback(null, values);
-        });
+  var query = `SELECT t.* from ${station} t where timestamp_cet >= '${startDateObj.toISOString()}'::timestamptz and timestamp_cet < '${endDateObj.toISOString()}'::timestampTZ ordeR BY timestamp_cet`;
+  console.log("Query", query)
+  var result;
+  pool.connect()
+   .then(client => {
+     return client.query(query)
+       .then(dbres => {
+         client.release()
+         var container = _.map(dbres.rows, function(row) {
+             return {
+                 'station': station,
+                 'timestamp': row['timestamp_utc'],
+                 'values': _.mapValues(_.omit(row, ['timestamp_utc']), function(element, attr) {
+                     var config = configFor(attr, keyMapping);
+                     return {
+                         'value': config.parseFn(element),
+                         'unit': config.unit,
+                         'status': 'ok'
+                     };
+                 })
+             }
+         });
+          
+         result = {
+             ok: true,
+             result: container
+         };
+       })
+       .catch(err => {
+         client.release()
+         console.log(err.stack)
+         result = {
+             ok: false,
+             message: err
+         };
+       })
+       .finally(() => {
+         res.json(result);
+       });
+   }) 
 }
 
 function stations(req, res) {
@@ -197,7 +151,7 @@ function configFor(title, keyMapping) {
         return keyMapping[title];
     }
     return {
-        label: title,
+        unit: '',
         parseFn: _.identity
     };
 }

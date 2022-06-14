@@ -18,16 +18,12 @@
   },
   "homepage": "https://github.com/metaodi/tecdottir#readme",
   "dependencies": {
-    "async": "^3.2.4",
-    "cheerio": "^0.22.0",
     "dotenv": "^16.0.1",
-    "encoding": "^0.1.13",
     "express": "^4.18.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",
     "moment-timezone": "^0.5.34",
     "pg": "^8.7.3",
-    "superagent": "^7.1.6",
     "swagger-express-mw": "^0.7.0",
     "swagger-ui-express": "^4.4.0"
   },
