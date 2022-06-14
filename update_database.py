@@ -43,7 +43,7 @@ def create_table(cur, table, purge, drop):
         wind_speed_avg_10min float,
         wind_force_avg_10min float,
         wind_direction int,
-        windchill text,
+        windchill float,
         barometric_pressure_qfe float,
         precipitation float,
         dew_point float,
