@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Changed
+- BC-Break: format of `timestamp` changed, it is now a valid ISO-8601 string
+- Use postgres as a backend (instead of scraping HTML of Tecson)
+- The "try-it-out" button is on by default on the Swagger UI
+
+### Added
+- Python script to update the postgres db (using GitHub Actions)
 
 ## [0.0.7] - 2022-06-07
 ### Added
