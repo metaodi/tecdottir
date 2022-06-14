@@ -62,7 +62,7 @@ def create_table(cur, table, purge, drop):
 def load_csv(cur, path, table):
     with open(path, 'r') as f:
         next(f) # Skip the header row.
-        cur.copy_from(f, table, sep=',', null='""')
+        cur.copy_from(f, table, sep=',', null='')
 
 
 try:
