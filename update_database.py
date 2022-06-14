@@ -47,7 +47,7 @@ def create_table(cur, table, purge, drop):
         barometric_pressure_qfe float,
         precipitation float,
         dew_point float,
-        global_radiation int,
+        global_radiation float,
         humidity float,
         water_level float
     );

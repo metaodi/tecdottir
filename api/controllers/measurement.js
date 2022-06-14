@@ -67,7 +67,7 @@ var keyMapping = {
     },
     'global_radiation': {
         unit: 'W/m²',
-        parseFn: parseInt
+        parseFn: parseFloat
     },
     'humidity': {
         unit: '%',
