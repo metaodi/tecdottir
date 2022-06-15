@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const Moment = require('moment-timezone');
-const { Pool, Client } = require('pg')
+const { Pool } = require('pg')
 const result = require('dotenv').config()
 
 const pool = new Pool({
@@ -87,46 +87,48 @@ function measurements(req, res) {
   var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
   var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
 
-  var query = `SELECT t.* from ${station} t where timestamp_cet >= '${startDateObj.toISOString()}'::timestamptz and timestamp_cet < '${endDateObj.toISOString()}'::timestampTZ ordeR BY timestamp_cet`;
-  console.log("Query", query)
-  var result;
-  pool.connect()
-   .then(client => {
-     return client.query(query)
-       .then(dbres => {
-         client.release()
-         var container = _.map(dbres.rows, function(row) {
-             return {
-                 'station': station,
-                 'timestamp': row['timestamp_utc'],
-                 'values': _.mapValues(_.omit(row, ['timestamp_utc']), function(element, attr) {
-                     var config = configFor(attr, keyMapping);
-                     return {
-                         'value': config.parseFn(element),
-                         'unit': config.unit,
-                         'status': 'ok'
-                     };
-                 })
-             }
-         });
-          
-         result = {
-             ok: true,
-             result: container
-         };
-       })
-       .catch(err => {
-         client.release()
-         console.log(err.stack)
-         result = {
-             ok: false,
-             message: err
-         };
-       })
-       .finally(() => {
+  queryDatabase(pool, station, startDateObj, endDateObj)
+   .then(result => {
          res.json(result);
-       });
    }) 
+}
+
+async function queryDatabase(pool, station, startDate, endDate) {
+  var query = `SELECT t.* FROM ${station} t
+               WHERE timestamp_cet >= '${startDate.toISOString()}'::timestamptz
+               AND timestamp_cet < '${endDate.toISOString()}'::timestamptz
+               ORDER BY timestamp_cet`;
+  var client;
+  try {
+      client = await pool.connect()
+      const dbres = await client.query(query)
+      var container = _.map(dbres.rows, function(row) {
+          return {
+              'station': station,
+              'timestamp': row['timestamp_utc'],
+              'values': _.mapValues(_.omit(row, ['timestamp_utc']), function(element, attr) {
+                  var config = configFor(attr, keyMapping);
+                  return {
+                      'value': config.parseFn(element),
+                      'unit': config.unit,
+                      'status': 'ok'
+                  };
+              })
+          }
+      });
+     return {
+         ok: true,
+         result: container
+     };
+  } catch (err) {
+    console.log(err.stack)
+    return {
+        ok: false,
+        message: err
+    };
+  } finally {
+      client.release()
+  }
 }
 
 function stations(req, res) {

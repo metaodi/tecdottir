@@ -30,6 +30,7 @@
   "devDependencies": {
     "nock": "^13.2.6",
     "should": "^13.2.3",
+    "sinon": "^14.0.0",
     "supertest": "^6.2.3"
   },
   "engines": {

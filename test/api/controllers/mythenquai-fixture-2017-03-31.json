@@ -1,0 +1,55 @@
+{
+  "rows": [
+    {
+      "timestamp_utc": "2017-03-30T22:00:00.000Z",
+      "timestamp_cet": "2017-03-30T22:00:00.000Z",
+      "air_temperature": 11.7,
+      "water_temperature": 11.5,
+      "wind_gust_max_10min": 1.4,
+      "wind_speed_avg_10min": 0.9,
+      "wind_force_avg_10min": 0.9,
+      "wind_direction": 175,
+      "windchill": 11.7,
+      "barometric_pressure_qfe": 974.6,
+      "precipitation": 0,
+      "dew_point": 8.1,
+      "global_radiation": 0,
+      "humidity": 78,
+      "water_level": 405.9
+    },
+    {
+      "timestamp_utc": "2017-03-30T22:10:00.000Z",
+      "timestamp_cet": "2017-03-30T22:10:00.000Z",
+      "air_temperature": 11.6,
+      "water_temperature": 11.4,
+      "wind_gust_max_10min": 1.2,
+      "wind_speed_avg_10min": 1,
+      "wind_force_avg_10min": 1,
+      "wind_direction": 166,
+      "windchill": 11.6,
+      "barometric_pressure_qfe": 974.5,
+      "precipitation": 0,
+      "dew_point": 7.8,
+      "global_radiation": 0,
+      "humidity": 78,
+      "water_level": 405.9
+    },
+    {
+      "timestamp_utc": "2017-03-30T22:20:00.000Z",
+      "timestamp_cet": "2017-03-30T22:20:00.000Z",
+      "air_temperature": 11.5,
+      "water_temperature": 11.4,
+      "wind_gust_max_10min": 1.4,
+      "wind_speed_avg_10min": 1.2,
+      "wind_force_avg_10min": 1.2,
+      "wind_direction": 155,
+      "windchill": 11.5,
+      "barometric_pressure_qfe": 974.5,
+      "precipitation": 0,
+      "dew_point": 7.8,
+      "global_radiation": 0,
+      "humidity": 78,
+      "water_level": 405.9
+    }
+  ]
+}
