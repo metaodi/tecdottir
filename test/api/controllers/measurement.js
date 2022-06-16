@@ -13,7 +13,7 @@ describe('controllers', function() {
 
         describe('GET /measurements', function() {
 
-            it('mythenquai should return a valid JSON response', async function(done) {
+            it('mythenquai should return a valid JSON response', function(done) {
                 // setup  mock
                 var content = fs.readFileSync('./test/api/controllers/mythenquai-fixture-2017-03-31.json');
                 var mockRes = JSON.parse(content);
