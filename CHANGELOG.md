@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## [1.0.0] - 2022-06-16
 ### Changed
 - BC-Break: format of `timestamp` changed, it is now a valid ISO-8601 string
 - Use postgres as a backend (instead of scraping HTML of Tecson)
@@ -66,7 +68,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/tecdottir/compare/v0.0.7...HEAD
+[Unreleased]: https://github.com/metaodi/tecdottir/compare/v1.0.0...HEAD
+[1.0.o]: https://github.com/metaodi/tecdottir/compare/v0.0.7...v1.0.0
 [0.0.7]: https://github.com/metaodi/tecdottir/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/metaodi/tecdottir/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/metaodi/tecdottir/compare/v0.0.4...v0.0.5
