@@ -154,6 +154,11 @@ describe('controllers', function() {
             });
 
             it('should not work without a station name', function(done) {
+                var clientStub = Sinon.stub();
+                clientStub.query = Sinon.stub().resolves({"rows": []});
+                clientStub.release = Sinon.stub();
+                var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
+
                 request(server)
                   .get('/measurements')
                   .set('Accept', 'application/json')
@@ -165,6 +170,11 @@ describe('controllers', function() {
             });
 
             it('should accept a startDate and endDate parameter', function(done) {
+                var clientStub = Sinon.stub();
+                clientStub.query = Sinon.stub().resolves({"rows": []});
+                clientStub.release = Sinon.stub();
+                var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
+
                 request(server)
                   .get('/measurements/mythenquai')
                   .query({ startDate: '2017-03-22'})
