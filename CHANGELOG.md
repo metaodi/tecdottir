@@ -69,7 +69,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
 [Unreleased]: https://github.com/metaodi/tecdottir/compare/v1.0.0...HEAD
-[1.0.o]: https://github.com/metaodi/tecdottir/compare/v0.0.7...v1.0.0
+[1.0.0]: https://github.com/metaodi/tecdottir/compare/v0.0.7...v1.0.0
 [0.0.7]: https://github.com/metaodi/tecdottir/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/metaodi/tecdottir/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/metaodi/tecdottir/compare/v0.0.4...v0.0.5
