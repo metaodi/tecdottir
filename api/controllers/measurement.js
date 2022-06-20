@@ -80,24 +80,29 @@ var keyMapping = {
 };
 
 function measurements(req, res) {
-  var station = req.swagger.params.station.value;
-  var startDate = req.swagger.params.startDate.value || Moment().toISOString();
-  var endDate = req.swagger.params.endDate.value || Moment().add(1, 'days').toISOString();
+  queryDatabase(pool, req.swagger.params)
+   .then(result => {
+     res.json(result);
+   }) 
+}
+
+async function queryDatabase(pool, params) {
+  var station = params.station.value;
+  var startDate = params.startDate.value || Moment().toISOString();
+  var endDate = params.endDate.value || Moment().add(1, 'days').toISOString();
+  var sort = params.sort.value || 'timestamp_cet desc';
+  var limit = params.limit.value || 500;
+  var offset = params.offset.value || 0;
 
   var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
   var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
 
-  queryDatabase(pool, station, startDateObj, endDateObj)
-   .then(result => {
-         res.json(result);
-   }) 
-}
-
-async function queryDatabase(pool, station, startDate, endDate) {
   var query = `SELECT t.* FROM ${station} t
-               WHERE timestamp_cet >= '${startDate.toISOString()}'::timestamptz
-               AND timestamp_cet < '${endDate.toISOString()}'::timestamptz
-               ORDER BY timestamp_cet`;
+               WHERE timestamp_cet >= '${startDateObj.toISOString()}'::timestamptz
+               AND timestamp_cet < '${endDateObj.toISOString()}'::timestamptz
+               ORDER BY ${sort}
+               LIMIT ${limit}
+               OFFSET ${offset}`;
   var client;
   try {
       client = await pool.connect()
@@ -118,10 +123,11 @@ async function queryDatabase(pool, station, startDate, endDate) {
       });
      return {
          ok: true,
+         row_count: dbres.rowCount,
          result: container
      };
   } catch (err) {
-    console.log(err.stack)
+    console.error(err.stack)
     return {
         ok: false,
         message: err

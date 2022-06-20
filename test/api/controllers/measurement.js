@@ -32,6 +32,7 @@ describe('controllers', function() {
 
                     res.body.should.not.be.empty;
                     res.body.ok.should.be.true;
+                    res.body.row_count.should.equal(3); 
                     res.body.result.length.should.equal(3); 
 
                     var firstResult = res.body.result[0];
@@ -115,6 +116,7 @@ describe('controllers', function() {
 
                     res.body.should.not.be.empty;
                     res.body.ok.should.be.true;
+                    res.body.row_count.should.equal(3); 
                     res.body.result.length.should.equal(3); 
 
                     var firstResult = res.body.result[0];
@@ -211,7 +213,9 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
+                    res.body.ok.should.be.true;
                     res.body.result.length.should.equal(0);
+                    res.body.row_count.should.equal(0); 
 
                     done();
                   });
