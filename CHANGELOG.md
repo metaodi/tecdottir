@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Default sort is now `timestamp_cet desc`, to change back to the old behvior use `sort=timestamp_cet asc`
 
+### Removed
+- Unused dependency `nock`
+
 ## [1.0.0] - 2022-06-16
 ### Changed
 - BC-Break: format of `timestamp` changed, it is now a valid ISO-8601 string
