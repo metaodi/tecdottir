@@ -11,7 +11,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - 3 new query parameters: `sort`, `limit` and `offset`, they can be used for pagination
 
 ### Changed
-- Default sort on the Swagger UI is now `timestamp_cet desc`, if no sort parameter is specified `timestamp_cet asc` is used
 - Add node v16 and v18 to GitHub Action matrix
 
 ### Removed
