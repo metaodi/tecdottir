@@ -18,8 +18,15 @@ describe('controllers', function() {
                 // setup  mock
                 var content = fs.readFileSync('./test/api/controllers/mythenquai-fixture-2017-03-31.json');
                 var mockRes = JSON.parse(content);
+
+                var totalCount = fs.readFileSync('./test/api/controllers/total_count.json');
+                var mockCount = JSON.parse(totalCount);
+
                 var clientStub = Sinon.stub();
-                clientStub.query = Sinon.stub().resolves(mockRes);
+                var queryStub = Sinon.stub();
+                queryStub.onFirstCall().resolves(mockRes);
+                queryStub.onSecondCall().resolves(mockCount);
+                clientStub.query = queryStub;
                 clientStub.release = Sinon.stub();
                 var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
                 
@@ -32,9 +39,10 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
-                    res.body.ok.should.be.true;
+                    res.body.ok.should.equal(true);
                     res.body.row_count.should.equal(3); 
                     res.body.result.length.should.equal(3); 
+                    res.body.total_count.should.equal(123); 
 
                     var firstResult = res.body.result[0];
                     var keys = Object.keys(firstResult.values);
@@ -91,7 +99,7 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
-                    res.body.ok.should.be.false;
+                    res.body.ok.should.equal(false);
                     res.body.message.name.should.equal("Error: DB"); 
 
                     done();
@@ -102,8 +110,15 @@ describe('controllers', function() {
                 // setup  mock
                 var content = fs.readFileSync('./test/api/controllers/tiefenbrunnen-fixture-2022-03-31.json');
                 var mockRes = JSON.parse(content);
+
+                var totalCount = fs.readFileSync('./test/api/controllers/total_count.json');
+                var mockCount = JSON.parse(totalCount);
+
                 var clientStub = Sinon.stub();
-                clientStub.query = Sinon.stub().resolves(mockRes);
+                var queryStub = Sinon.stub();
+                queryStub.onFirstCall().resolves(mockRes);
+                queryStub.onSecondCall().resolves(mockCount);
+                clientStub.query = queryStub;
                 clientStub.release = Sinon.stub();
                 var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
 
@@ -116,9 +131,10 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
-                    res.body.ok.should.be.true;
+                    res.body.ok.should.equal(true);
                     res.body.row_count.should.equal(3); 
                     res.body.result.length.should.equal(3); 
+                    res.body.total_count.should.equal(123); 
 
                     var firstResult = res.body.result[0];
                     var keys = Object.keys(firstResult.values);
@@ -271,9 +287,14 @@ describe('controllers', function() {
             it('should return an empty array for an empty result JSON', function(done) {
                 // setup  mock
                 var content = fs.readFileSync('./test/api/controllers/tiefenbrunnen-fixture-empty.json');
+                var totalCount = fs.readFileSync('./test/api/controllers/total_count.json');
                 var mockRes = JSON.parse(content);
+                var mockCount = JSON.parse(totalCount);
                 var clientStub = Sinon.stub();
-                clientStub.query = Sinon.stub().resolves(mockRes);
+                var queryStub = Sinon.stub();
+                queryStub.onFirstCall().resolves(mockRes);
+                queryStub.onSecondCall().resolves(mockCount);
+                clientStub.query = queryStub;
                 clientStub.release = Sinon.stub();
                 var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
 
@@ -288,9 +309,10 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
-                    res.body.ok.should.be.true;
+                    res.body.ok.should.equal(true);
                     res.body.result.length.should.equal(0);
                     res.body.row_count.should.equal(0); 
+                    res.body.total_count.should.equal(123); 
 
                     done();
                   });
@@ -308,7 +330,7 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
-                    res.body.ok.should.be.true;
+                    res.body.ok.should.equal(true);
                     res.body.result.length.should.equal(2); 
 
                     var firstResult = res.body.result[0];

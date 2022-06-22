@@ -138,12 +138,12 @@ async function queryDatabase(pool, params) {
               })
           }
       });
-     return {
-         ok: true,
-         total_count: parseInt(countRes.rows[0]['total_count']),
-         row_count: dbres.rowCount,
-         result: container
-     };
+      return {
+          ok: true,
+          total_count: parseInt(countRes.rows[0]['total_count']),
+          row_count: dbres.rowCount,
+          result: container
+      };
   } catch (err) {
     console.error(err.stack)
     return {
