@@ -98,15 +98,22 @@ async function queryDatabase(pool, params) {
   var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
 
   var query = `SELECT t.* FROM ${station} t
-               WHERE timestamp_cet >= '${startDateObj.toISOString()}'::timestamptz
-               AND timestamp_cet < '${endDateObj.toISOString()}'::timestamptz
-               ORDER BY ${sort}
-               LIMIT ${limit}
-               OFFSET ${offset}`;
+               WHERE timestamp_cet >= $1
+               AND timestamp_cet < $2
+               ORDER BY $3
+               LIMIT $4
+               OFFSET $5`;
+  var params = [
+      startDateObj.toISOString(),
+      endDateObj.toISOString(),
+      sort,
+      limit,
+      offset
+  ];
   var client;
   try {
       client = await pool.connect()
-      const dbres = await client.query(query)
+      const dbres = await client.query(query, params)
       var container = _.map(dbres.rows, function(row) {
           return {
               'station': station,
