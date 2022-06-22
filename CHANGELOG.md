@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - 3 new query parameters: `sort`, `limit` and `offset`, they can be used for pagination
 
 ### Changed
-- BC-Break: Default sort is now `timestamp_cet desc`, to change back to the old behvior use `sort=timestamp_cet asc`
+- Default sort on the Swagger UI is now `timestamp_cet desc`, if no sort parameter is specified `timestamp_cet asc` is used
 
 ### Removed
 - Unused dependency `nock`

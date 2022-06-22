@@ -90,7 +90,7 @@ async function queryDatabase(pool, params) {
   var station = params.station.value;
   var startDate = params.startDate.value || Moment().toISOString();
   var endDate = params.endDate.value || Moment().add(1, 'days').toISOString();
-  var sort = params.sort.value || 'timestamp_cet desc';
+  var sort = params.sort.value || 'timestamp_cet asc';
   var limit = params.limit.value || 500;
   var offset = params.offset.value || 0;
 
