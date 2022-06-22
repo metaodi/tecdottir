@@ -1,6 +1,6 @@
 {
   "name": "tecdottir",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "API wrapper to get tecson measurements",
   "main": "app.js",
   "scripts": {
