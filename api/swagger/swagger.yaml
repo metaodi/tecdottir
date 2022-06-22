@@ -305,11 +305,14 @@ definitions:
   MeasurementApiResponse:
     required:
       - ok
+      - total_count
       - row_count
       - result
     properties:
       ok:
         type: boolean
+      total_count:
+          type: integer
       row_count:
           type: integer
       result:

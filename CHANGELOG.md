@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Added
+- New `total_count` field in the response to show how many rows there are meeting the criteria (regardless of the `limit` parameter)
 
 ## [1.1.0] - 2022-06-22
 ### Added

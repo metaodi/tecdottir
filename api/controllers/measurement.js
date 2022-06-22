@@ -91,7 +91,7 @@ async function queryDatabase(pool, params) {
   var startDate = params.startDate.value || Moment().toISOString();
   var endDate = params.endDate.value || Moment().add(1, 'days').toISOString();
   var sort = params.sort.value || 'timestamp_cet asc';
-  var limit = params.limit.value || 500;
+  var limit = (typeof params.limit.value !== 'undefined') ? params.limit.value : 500;
   var offset = params.offset.value || 0;
 
   var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
@@ -110,10 +110,20 @@ async function queryDatabase(pool, params) {
       limit,
       offset
   ];
+   var countQuery = `SELECT COUNT(*) AS total_count FROM ${station} t
+                     WHERE timestamp_cet >= $1
+                     AND timestamp_cet < $2
+                     ORDER BY $3`;
+  var countParams = [
+      startDateObj.toISOString(),
+      endDateObj.toISOString(),
+      sort,
+  ];
   var client;
   try {
       client = await pool.connect()
-      const dbres = await client.query(query, params)
+      const dbres = await client.query(query, params);
+      const countRes = await client.query(countQuery, countParams);
       var container = _.map(dbres.rows, function(row) {
           return {
               'station': station,
@@ -130,6 +140,7 @@ async function queryDatabase(pool, params) {
       });
      return {
          ok: true,
+         total_count: parseInt(countRes.rows[0]['total_count']),
          row_count: dbres.rowCount,
          result: container
      };
