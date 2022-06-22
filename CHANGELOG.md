@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - 3 new query parameters: `sort`, `limit` and `offset`, they can be used for pagination
 
 ### Changed
-- Default sort is now `timestamp_cet desc`, to change back to the old behvior use `sort=timestamp_cet asc`
+- BC-Break: Default sort is now `timestamp_cet desc`, to change back to the old behvior use `sort=timestamp_cet asc`
 
 ### Removed
 - Unused dependency `nock`
