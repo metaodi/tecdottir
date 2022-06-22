@@ -80,28 +80,40 @@ var keyMapping = {
 };
 
 function measurements(req, res) {
-  var station = req.swagger.params.station.value;
-  var startDate = req.swagger.params.startDate.value || Moment().toISOString();
-  var endDate = req.swagger.params.endDate.value || Moment().add(1, 'days').toISOString();
+  queryDatabase(pool, req.swagger.params)
+   .then(result => {
+     res.json(result);
+   }) 
+}
+
+async function queryDatabase(pool, params) {
+  var station = params.station.value;
+  var startDate = params.startDate.value || Moment().toISOString();
+  var endDate = params.endDate.value || Moment().add(1, 'days').toISOString();
+  var sort = params.sort.value || 'timestamp_cet asc';
+  var limit = params.limit.value || 500;
+  var offset = params.offset.value || 0;
 
   var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
   var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
 
-  queryDatabase(pool, station, startDateObj, endDateObj)
-   .then(result => {
-         res.json(result);
-   }) 
-}
-
-async function queryDatabase(pool, station, startDate, endDate) {
   var query = `SELECT t.* FROM ${station} t
-               WHERE timestamp_cet >= '${startDate.toISOString()}'::timestamptz
-               AND timestamp_cet < '${endDate.toISOString()}'::timestamptz
-               ORDER BY timestamp_cet`;
+               WHERE timestamp_cet >= $1
+               AND timestamp_cet < $2
+               ORDER BY $3
+               LIMIT $4
+               OFFSET $5`;
+  var params = [
+      startDateObj.toISOString(),
+      endDateObj.toISOString(),
+      sort,
+      limit,
+      offset
+  ];
   var client;
   try {
       client = await pool.connect()
-      const dbres = await client.query(query)
+      const dbres = await client.query(query, params)
       var container = _.map(dbres.rows, function(row) {
           return {
               'station': station,
@@ -118,10 +130,11 @@ async function queryDatabase(pool, station, startDate, endDate) {
       });
      return {
          ok: true,
+         row_count: dbres.rowCount,
          result: container
      };
   } catch (err) {
-    console.log(err.stack)
+    console.error(err.stack)
     return {
         ok: false,
         message: err

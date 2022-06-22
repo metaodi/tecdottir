@@ -49,6 +49,28 @@ paths:
           required: false
           type: string
           format: date
+        - name: sort
+          in: query
+          description: "Column(s) to sort by (followed by asc/desc), provide multiple columns separated by comma `,`"
+          required: false
+          type: string
+          default: "timestamp_cet asc"
+          pattern: '^((timestamp_cet|timestamp_utc|air_temperature|water_temperature|wind_gust_max_10min|wind_speed_avg_10min|wind_force_avg_10min|wind_direction|windchill|barometric_pressure_qfe|precipitation|dew_point|global_radiation|humidity|water_level) ?(asc|desc)?,?)*$'
+        - name: limit
+          in: query
+          description: "Number of rows to return (maximum: 1000)"
+          required: false
+          type: integer
+          minimum: 0
+          default: 500
+          maximum: 1000
+        - name: offset
+          in: query
+          description: "Number of rows to offset (needed for pagination)"
+          required: false
+          type: integer
+          minimum: 0
+          default: 0
       responses:
         "200":
           description: Success
@@ -283,10 +305,13 @@ definitions:
   MeasurementApiResponse:
     required:
       - ok
+      - row_count
       - result
     properties:
       ok:
         type: boolean
+      row_count:
+          type: integer
       result:
         type: array
         items:

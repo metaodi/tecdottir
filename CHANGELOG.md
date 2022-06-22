@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Added
+- New `row_count` field in the response to indicate how many rows are being returned
+- 3 new query parameters: `sort`, `limit` and `offset`, they can be used for pagination
+
+### Changed
+- Default sort on the Swagger UI is now `timestamp_cet desc`, if no sort parameter is specified `timestamp_cet asc` is used
+
+### Removed
+- Unused dependency `nock`
 
 ## [1.0.0] - 2022-06-16
 ### Changed

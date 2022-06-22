@@ -2,6 +2,7 @@ var should = require('should');
 var request = require('supertest');
 var fs = require('fs');
 var Sinon = require('sinon');
+var Moment = require('moment-timezone');
 const { Client, Pool } = require('pg');
 var server = require('../../../app');
 
@@ -32,6 +33,7 @@ describe('controllers', function() {
 
                     res.body.should.not.be.empty;
                     res.body.ok.should.be.true;
+                    res.body.row_count.should.equal(3); 
                     res.body.result.length.should.equal(3); 
 
                     var firstResult = res.body.result[0];
@@ -115,6 +117,7 @@ describe('controllers', function() {
 
                     res.body.should.not.be.empty;
                     res.body.ok.should.be.true;
+                    res.body.row_count.should.equal(3); 
                     res.body.result.length.should.equal(3); 
 
                     var firstResult = res.body.result[0];
@@ -191,6 +194,80 @@ describe('controllers', function() {
                   });
             });
 
+            it('should accept pagination parameter', function(done) {
+                var clientStub = Sinon.stub();
+                clientStub.query = Sinon.stub().resolves({"rows": []});
+                clientStub.release = Sinon.stub();
+                var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
+
+                request(server)
+                  .get('/measurements/mythenquai')
+                  .query({ startDate: '2022-06-22'})
+                  .query({ endDate: '2022-06-23'})
+                  .query({ sort: 'air_temperature desc'})
+                  .query({ limit: 10})
+                  .query({ offset: 0})
+                  .set('Accept', 'application/json')
+                  .expect('Content-Type', /json/)
+                  .expect(200)
+                  .end(function(err, res) {
+                    should.not.exist(err);
+
+                    res.body.should.not.be.empty;
+                    var query =   `SELECT t.* FROM mythenquai t
+                                   WHERE timestamp_cet >= $1
+                                   AND timestamp_cet < $2
+                                   ORDER BY $3
+                                   LIMIT $4
+                                   OFFSET $5`;
+                    var params = [
+                        '2022-06-21T22:00:00.000Z',
+                        '2022-06-22T22:00:00.000Z',
+                        'air_temperature desc',
+                        10,
+                        0
+                    ];
+                    var cleanQuery = query.replace(/\s+/g, " ");
+                    var args = clientStub.query.getCall(0).args;
+
+                    var argQuery = args[0].replace(/\s+/g, " ");
+                    argQuery.should.be.equal(cleanQuery);
+                    args[1].should.be.deepEqual(params);
+
+                    done();
+                  });
+            });
+
+            it('should use default parameters', function(done) {
+                var clientStub = Sinon.stub();
+                clientStub.query = Sinon.stub().resolves({"rows": []});
+                clientStub.release = Sinon.stub();
+                var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
+
+                request(server)
+                  .get('/measurements/tiefenbrunnen')
+                  .set('Accept', 'application/json')
+                  .expect('Content-Type', /json/)
+                  .expect(200)
+                  .end(function(err, res) {
+                    should.not.exist(err);
+
+                    res.body.should.not.be.empty;
+                    var today = Moment().tz('Europe/Zurich').startOf('day');
+                    var params = [
+                        today.toISOString(),
+                        today.add(1, 'days').toISOString(),
+                        'timestamp_cet asc',
+                        500,
+                        0
+                    ];
+                    var args = clientStub.query.getCall(0).args;
+                    args[1].should.be.deepEqual(params);
+
+                    done();
+                  });
+            });
+
             it('should return an empty array for an empty result JSON', function(done) {
                 // setup  mock
                 var content = fs.readFileSync('./test/api/controllers/tiefenbrunnen-fixture-empty.json');
@@ -211,7 +288,9 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
+                    res.body.ok.should.be.true;
                     res.body.result.length.should.equal(0);
+                    res.body.row_count.should.equal(0); 
 
                     done();
                   });
