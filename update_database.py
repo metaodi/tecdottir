@@ -64,6 +64,9 @@ def load_csv(cur, path, table):
         next(f) # Skip the header row.
         cur.copy_from(f, table, sep=',', null='')
 
+def reindex(cur):
+    cur.execute("REINDEX INDEX idx_timestamp_utc;")
+    cur.execute("REINDEX INDEX idx_timestamp_cet;")
 
 try:
     DB_URL = os.getenv('DATABASE_URL')
@@ -91,6 +94,9 @@ try:
 
         # commit changes
         conn.commit()
+
+        # reindex both indices
+        reindex(cur)
         
         cur.close()
     finally:
