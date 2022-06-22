@@ -2,6 +2,7 @@ var should = require('should');
 var request = require('supertest');
 var fs = require('fs');
 var Sinon = require('sinon');
+var Moment = require('moment-timezone');
 const { Client, Pool } = require('pg');
 var server = require('../../../app');
 
@@ -231,6 +232,36 @@ describe('controllers', function() {
 
                     var argQuery = args[0].replace(/\s+/g, " ");
                     argQuery.should.be.equal(cleanQuery);
+                    args[1].should.be.deepEqual(params);
+
+                    done();
+                  });
+            });
+
+            it('should use default parameters', function(done) {
+                var clientStub = Sinon.stub();
+                clientStub.query = Sinon.stub().resolves({"rows": []});
+                clientStub.release = Sinon.stub();
+                var stubPool = Sinon.stub(Pool.prototype, 'connect').resolves(clientStub);
+
+                request(server)
+                  .get('/measurements/tiefenbrunnen')
+                  .set('Accept', 'application/json')
+                  .expect('Content-Type', /json/)
+                  .expect(200)
+                  .end(function(err, res) {
+                    should.not.exist(err);
+
+                    res.body.should.not.be.empty;
+                    var today = Moment().tz('Europe/Zurich').startOf('day');
+                    var params = [
+                        today.toISOString(),
+                        today.add(1, 'days').toISOString(),
+                        'timestamp_cet asc',
+                        500,
+                        0
+                    ];
+                    var args = clientStub.query.getCall(0).args;
                     args[1].should.be.deepEqual(params);
 
                     done();
