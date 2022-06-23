@@ -95,34 +95,37 @@ async function queryDatabase(pool, params) {
   var station = params.station.value;
   var startDate = params.startDate.value || Moment().toISOString();
   var endDate = params.endDate.value || Moment().add(1, 'days').toISOString();
-  var sort = params.sort.value || 'timestamp_cet asc';
+  var sort = params.sort.value || 'timestamp_cet desc';
+  // this is to avoid a BC-break, before introducing the sort value
+  // the result was always sorted by `timestamp_cet asc`, but we want to 
+  // use `timestamp_cet desc` as default value on Swagger UI
+  if (!params.sort.raw) {
+      sort = 'timestamp_cet asc';
+  }
   var limit = (typeof params.limit.value !== 'undefined') ? params.limit.value : 500;
   var offset = params.offset.value || 0;
 
   var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
   var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
 
-  var query = `SELECT t.* FROM ${station} t
+  var query = `SELECT * FROM ${station}
                WHERE timestamp_cet >= $1
                AND timestamp_cet < $2
-               ORDER BY $3
-               LIMIT $4
-               OFFSET $5`;
+               ORDER BY ${sort}
+               LIMIT $3
+               OFFSET $4`;
   var params = [
-      startDateObj.toISOString(),
-      endDateObj.toISOString(),
-      sort,
+      startDateObj,
+      endDateObj,
       limit,
       offset
   ];
-   var countQuery = `SELECT COUNT(*) AS total_count FROM ${station} t
-                     WHERE timestamp_cet >= $1
-                     AND timestamp_cet < $2
-                     ORDER BY $3`;
+  var countQuery = `SELECT COUNT(1) AS total_count FROM ${station}
+                    WHERE timestamp_cet >= $1
+                    AND timestamp_cet < $2`;
   var countParams = [
-      startDateObj.toISOString(),
-      endDateObj.toISOString(),
-      sort,
+      startDateObj,
+      endDateObj
   ];
   var client;
   try {

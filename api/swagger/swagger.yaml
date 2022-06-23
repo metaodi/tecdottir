@@ -54,7 +54,7 @@ paths:
           description: "Column(s) to sort by (followed by asc/desc), provide multiple columns separated by comma `,`"
           required: false
           type: string
-          default: "timestamp_cet asc"
+          default: "timestamp_cet desc"
           pattern: '^((timestamp_cet|timestamp_utc|air_temperature|water_temperature|wind_gust_max_10min|wind_speed_avg_10min|wind_force_avg_10min|wind_direction|windchill|barometric_pressure_qfe|precipitation|dew_point|global_radiation|humidity|water_level) ?(asc|desc)?,?)*$'
         - name: limit
           in: query

@@ -230,25 +230,24 @@ describe('controllers', function() {
                     should.not.exist(err);
 
                     res.body.should.not.be.empty;
-                    var query =   `SELECT t.* FROM mythenquai t
+                    var query =   `SELECT * FROM mythenquai
                                    WHERE timestamp_cet >= $1
                                    AND timestamp_cet < $2
-                                   ORDER BY $3
-                                   LIMIT $4
-                                   OFFSET $5`;
-                    var params = [
-                        '2022-06-21T22:00:00.000Z',
-                        '2022-06-22T22:00:00.000Z',
-                        'air_temperature desc',
-                        10,
-                        0
-                    ];
+                                   ORDER BY air_temperature desc
+                                   LIMIT $3
+                                   OFFSET $4`;
                     var cleanQuery = query.replace(/\s+/g, " ");
                     var args = clientStub.query.getCall(0).args;
 
                     var argQuery = args[0].replace(/\s+/g, " ");
                     argQuery.should.be.equal(cleanQuery);
-                    args[1].should.be.deepEqual(params);
+
+                    var [startParam, endParam, limitParam, offsetParam] = args[1];
+                    args[1].length.should.be.equal(4);
+                    startParam.toISOString().should.be.equal('2022-06-21T22:00:00.000Z');
+                    endParam.toISOString().should.be.equal('2022-06-22T22:00:00.000Z');
+                    limitParam.should.be.equal(10);
+                    offsetParam.should.be.equal(0);
 
                     done();
                   });
@@ -270,15 +269,13 @@ describe('controllers', function() {
 
                     res.body.should.not.be.empty;
                     var today = Moment().tz('Europe/Zurich').startOf('day');
-                    var params = [
-                        today.toISOString(),
-                        today.add(1, 'days').toISOString(),
-                        'timestamp_cet asc',
-                        500,
-                        0
-                    ];
-                    var args = clientStub.query.getCall(0).args;
-                    args[1].should.be.deepEqual(params);
+                    var args = clientStub.query.getCall(0).args[1];
+                    var [startParam, endParam, limitParam, offsetParam] = args;
+                    args.length.should.be.equal(4);
+                    startParam.toISOString().should.be.equal(today.toISOString());
+                    endParam.toISOString().should.be.equal(today.add(1, 'days').toISOString());
+                    limitParam.should.be.equal(500);
+                    offsetParam.should.be.equal(0);
 
                     done();
                   });

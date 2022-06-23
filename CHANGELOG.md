@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Add instructions to setup a local database
 
+### Changed
+- Use `timestamp_cet desc` as default on Swagger UI, but keep `timestamp_cet asc` as default, if no `sort` parameter is given
+
+### Fixed
+- Fix sorting as pg does not allow parameters for `ORDER BY`
+
 ## [1.2.1] - 2022-06-22
 ### Fixed
 - Disable syntax highlighing to fix slow UI
