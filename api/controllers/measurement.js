@@ -7,7 +7,7 @@ const result = require('dotenv').config()
 var ssl = {
     rejectUnauthorized: false
 }
-if (process.env.DATABASE_URL.includes('localhost')) {
+if ("DATABASE_URL" in process.env && process.env.DATABASE_URL.includes('localhost')) {
     ssl = false;
 } 
 const pool = new Pool({
