@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## [1.3.1] - 2022-06-23
+### Fixed
+- Make sure tests work even if env variable is missing
+
 ## [1.3.0] - 2022-06-23
 ### Added
 - Add instructions to setup a local database
@@ -97,7 +101,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/tecdottir/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/metaodi/tecdottir/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/metaodi/tecdottir/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/metaodi/tecdottir/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/metaodi/tecdottir/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/metaodi/tecdottir/compare/v1.1.0...v1.2.0
