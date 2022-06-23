@@ -52,6 +52,28 @@ To run the tests, use the following command:
 npm test
 ```
 
+## Local database
+
+For local developlment you might want to use a local database in a docker container
+
+```
+docker run --rm -P -p 127.0.0.1:5432:5432 -e POSTGRES_PASSWORD="1234" --name pg postgres:alpine
+```
+
+Or use the provided script:
+
+```
+start_local_database.sh # start in it's own shell
+```
+
+Then you can set `DATABASE_URL` in `.env` to `postgresql://postgres:1234@localhost:5432/postgres`
+
+
+Once the db is there, import the data:
+```
+setup_local_database.sh
+```
+
 ## Create a new release
 
 1. Update the version number in `package.json` and `api/swagger/swagger.yaml`
