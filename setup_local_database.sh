@@ -6,4 +6,4 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 $DIR/download_csvs.sh
 
 # import csvs
-$DIR/import.csvs.sh
+$DIR/import_csvs.sh
