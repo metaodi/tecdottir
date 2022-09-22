@@ -93,8 +93,8 @@ function measurements(req, res) {
 
 async function queryDatabase(pool, params) {
   var station = params.station.value;
-  var startDate = params.startDate.value || Moment().toISOString();
-  var endDate = params.endDate.value || Moment().add(1, 'days').toISOString();
+  var startDate = params.startDate.value;
+  var endDate = params.endDate.value;
   var sort = params.sort.value || 'timestamp_cet desc';
   // this is to avoid a BC-break, before introducing the sort value
   // the result was always sorted by `timestamp_cet asc`, but we want to 
@@ -105,32 +105,13 @@ async function queryDatabase(pool, params) {
   var limit = (typeof params.limit.value !== 'undefined') ? params.limit.value : 500;
   var offset = params.offset.value || 0;
 
-  var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
-  var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
+  var queryObj = buildQuery(station, startDate, endDate, sort, limit, offset);
+  const {query, countQuery, queryParams, countParams} = queryObj;
 
-  var query = `SELECT * FROM ${station}
-               WHERE timestamp_cet >= $1
-               AND timestamp_cet < $2
-               ORDER BY ${sort}
-               LIMIT $3
-               OFFSET $4`;
-  var params = [
-      startDateObj,
-      endDateObj,
-      limit,
-      offset
-  ];
-  var countQuery = `SELECT COUNT(1) AS total_count FROM ${station}
-                    WHERE timestamp_cet >= $1
-                    AND timestamp_cet < $2`;
-  var countParams = [
-      startDateObj,
-      endDateObj
-  ];
   var client;
   try {
       client = await pool.connect()
-      const dbres = await client.query(query, params);
+      const dbres = await client.query(query, queryParams);
       const countRes = await client.query(countQuery, countParams);
       var container = _.map(dbres.rows, function(row) {
           return {
@@ -161,6 +142,43 @@ async function queryDatabase(pool, params) {
   } finally {
       client.release()
   }
+}
+
+function buildQuery(station, startDate, endDate, sort, limit, offset) {
+    var query = `SELECT * FROM ${station} WHERE 1 = 1`;
+    var countQuery = `SELECT COUNT(1) AS total_count FROM ${station} WHERE 1 = 1`;
+    var params = [];
+    var countParams = [];
+
+    if (startDate) {
+        var startDateObj = Moment(startDate).tz('Europe/Zurich').startOf('day');
+        const sc = params.push(startDateObj);
+        query = `${query} AND timestamp_cet >= $${sc}`
+        const csc = countParams.push(startDateObj)
+        countQuery = `${countQuery} AND timestamp_cet >= $${csc}`
+    }
+    if (endDate) {
+        var endDateObj = Moment(endDate).tz('Europe/Zurich').startOf('day');
+        const ec = params.push(endDateObj);
+        query = `${query} AND timestamp_cet < $${ec}`;
+        const cec = countParams.push(endDateObj)
+        countQuery = `${countQuery} AND timestamp_cet < $${cec}`
+    }
+    
+    query = `${query} ORDER BY ${sort}`;
+
+    const lc = params.push(limit);
+    query = `${query} LIMIT $${lc}`;
+
+    const oc = params.push(offset);
+    query = `${query} OFFSET $${oc}`;
+
+    return {
+        'query': query,
+        'countQuery': countQuery,
+        'queryParams': params,
+        'countParams': countParams
+    }
 }
 
 function stations(req, res) {
