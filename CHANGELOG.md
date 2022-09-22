@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Changed
+- Update npm dependencies
+- There are no longer default values for `startDate` and `endDate`, instead they are only added the the WHERE clause in the SQL, if a value is given.
+
+### Fixed
+- Fix typo in `setup_local_database.sh`
 
 ## [1.3.1] - 2022-06-23
 ### Fixed
