@@ -231,7 +231,8 @@ describe('controllers', function() {
 
                     res.body.should.not.be.empty;
                     var query =   `SELECT * FROM mythenquai
-                                   WHERE timestamp_cet >= $1
+                                   WHERE 1 = 1 
+                                   AND timestamp_cet >= $1
                                    AND timestamp_cet < $2
                                    ORDER BY air_temperature desc
                                    LIMIT $3
@@ -270,10 +271,8 @@ describe('controllers', function() {
                     res.body.should.not.be.empty;
                     var today = Moment().tz('Europe/Zurich').startOf('day');
                     var args = clientStub.query.getCall(0).args[1];
-                    var [startParam, endParam, limitParam, offsetParam] = args;
-                    args.length.should.be.equal(4);
-                    startParam.toISOString().should.be.equal(today.toISOString());
-                    endParam.toISOString().should.be.equal(today.add(1, 'days').toISOString());
+                    var [limitParam, offsetParam] = args;
+                    args.length.should.be.equal(2);
                     limitParam.should.be.equal(500);
                     offsetParam.should.be.equal(0);
 
