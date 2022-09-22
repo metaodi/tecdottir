@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: "1.4.0"
+  version: "1.4.1"
   title: Tecdottir
   description: This API returns data of the Tecson meteo station placed at Tiefenbrunnen and Mythenquai water police station.
   license:
