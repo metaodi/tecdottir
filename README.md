@@ -9,9 +9,9 @@ The City of Zurich has two such stations:
 * [Tiefenbrunnen](https://www.tecson-data.ch/zurich/tiefenbrunnen/index.php)
 * [Mythenquai](https://www.tecson-data.ch/zurich/mythenquai/index.php)
 
-The data is unfortunately not available in a machine-readable form, but there is a form on the website to get all the measurements as a HTML table.
+The data is available as [CSV from Open Data Zurich](https://data.stadt-zuerich.ch/dataset/sid_wapo_wetterstationen).
 
-tecdottir is an API based on this form and HTML table.
+tecdottir is an API based on this data.
 
 ## Showcases
 
