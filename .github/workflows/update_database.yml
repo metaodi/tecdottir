@@ -2,7 +2,7 @@ name: Update tecdottir database
 
 on:
   schedule:
-    - cron:  '14/15 * * * *' # runs daily
+    - cron:  '14/10 * * * *' # runs every 10min
   workflow_dispatch:
 
 jobs:
