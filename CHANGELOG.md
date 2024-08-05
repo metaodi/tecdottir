@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## [1.5.0] - 2024-08-05
+### Changed
+- Use new heroku stack, re-deployment
+
 ## [1.4.1] - 2022-09-23
 ### Fixed
 - Fixed tests
