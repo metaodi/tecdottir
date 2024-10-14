@@ -19,7 +19,7 @@
   "homepage": "https://github.com/metaodi/tecdottir#readme",
   "dependencies": {
     "dotenv": "^16.0.2",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
