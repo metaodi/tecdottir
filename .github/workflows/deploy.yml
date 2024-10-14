@@ -18,6 +18,9 @@ jobs:
           npm ci
           npm install -g https://github.com/swagger-api/swagger-node 
           
+      - name: Install heroku-cli
+        run: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+          
       - name: Run tests
         run: npm test
         
