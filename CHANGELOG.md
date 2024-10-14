@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## [2.0.0] - 2024-10-15
 ### Changed
 - BC-Break: change domain from tecdottir.herokuapp.com to tecdottir.metaodi.ch
 - Updated npm dependencies
@@ -120,7 +122,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/tecdottir/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/metaodi/tecdottir/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/metaodi/tecdottir/compare/v1.5.0...v2.0.0
 [1.5.0]: https://github.com/metaodi/tecdottir/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/metaodi/tecdottir/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/metaodi/tecdottir/compare/v1.3.1...v1.4.0
