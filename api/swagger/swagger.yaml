@@ -6,7 +6,7 @@ info:
   license:
       name: MIT License, © Stefan Oderbolz 2024
       url: https://github.com/metaodi/tecdottir/blob/master/LICENSE.md
-host: tecdottir.herokuapp.com
+host: tecdottir.metaodi.ch
 # basePath prefixes all resource paths 
 basePath: /
 schemes:
