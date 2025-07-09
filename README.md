@@ -18,6 +18,8 @@ tecdottir is an API based on this data.
 Projects based on this API are shown.
 
 * [**Zürichhorn**](https://editioneffet.ch/03069/zuerichhorn.html): map of Zürichhorn with temperature and wind by [Markus Steiger](https://github.com/01241)
+* [Dimitrios Koulialias](https://www.linkedin.com/in/dimitrios-koulialias-ph-d) published an article about his [**vizualization of the lake water level**](https://medium.com/python-in-plain-english/periodic-monitoring-of-lake-water-levels-using-python-and-render-ef46cf5b9f28?sk=b5ef950f37e7144324ace68817e1e33b) (Medium) using the Tecdottir API and Python
+
 
 (if you want on the list, create an issue or PR to add your project)
 
