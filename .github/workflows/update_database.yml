@@ -30,16 +30,15 @@ jobs:
         heroku_email: ${{secrets.HEROKU_EMAIL}}
         justlogin: true
         
-    - name: Get DATABASE_URL
+    - name: Get DATABASE_URL from heroku
       id: db
       run: |
         heroku ps -a tecdottir
-        echo "::set-output name=db_url::$(heroku config:get DATABASE_URL -a tecdottir)"
+        dburl=$(heroku config:get DATABASE_URL -a tecdottir)
+        echo "DATABASE_URL=${dburl}" >> "$GITHUB_ENV"
       
     - name: Download CSVs
       run: ./download_csvs.sh
       
     - name: Import CSVs to database
-      env:
-        DATABASE_URL: ${{steps.db.outputs.db_url}}
       run: ./import_csvs.sh
