@@ -4,7 +4,7 @@ info:
   title: Tecdottir
   description: This API returns data of the Tecson meteo station placed at Tiefenbrunnen and Mythenquai water police station.
   license:
-      name: MIT License, © Stefan Oderbolz 2024
+      name: MIT License, © Stefan Oderbolz 2026
       url: https://github.com/metaodi/tecdottir/blob/master/LICENSE.md
 host: tecdottir.metaodi.ch
 # basePath prefixes all resource paths 
