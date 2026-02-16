@@ -18,6 +18,16 @@ const swaggerDocument = yaml.load(fs.readFileSync(apiSpec, 'utf8'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Serve OpenAPI spec as JSON
+app.get('/swagger', (req, res) => {
+    res.json(swaggerDocument);
+});
+
+// Redirect root to /docs
+app.get('/', function (req, res) {
+    res.redirect('/docs')
+});
+
 // Serve Swagger UI documentation
 const port = process.env.PORT || 10010;
 app.use('/docs', SwaggerUi.serve, function (req, res) {
@@ -52,16 +62,6 @@ const measurementController = require('./api/controllers/measurement');
 // Define routes
 app.get('/measurements/:station', measurementController.measurements);
 app.get('/stations', measurementController.stations);
-
-// Serve OpenAPI spec as JSON
-app.get('/swagger', (req, res) => {
-    res.json(swaggerDocument);
-});
-
-// Redirect root to /docs
-app.get('/', function (req, res) {
-    res.redirect('/docs')
-});
 
 // Error handler
 app.use((err, req, res, next) => {
