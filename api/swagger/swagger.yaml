@@ -128,7 +128,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         air_temperature:
           type: object
@@ -141,7 +141,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         water_temperature:
           type: object
@@ -154,7 +154,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         wind_gust_max_10min:
           type: object
@@ -167,7 +167,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         wind_speed_avg_10min:
           type: object
@@ -180,7 +180,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         wind_force_avg_10min:
           type: object
@@ -193,7 +193,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         wind_direction:
           type: object
@@ -206,7 +206,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         windchill:
           type: object
@@ -219,7 +219,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         barometric_pressure_qfe:
           type: object
@@ -232,7 +232,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         percipitation:
           type: object
@@ -245,7 +245,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         dew_point:
           type: object
@@ -258,7 +258,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         global_radiation:
           type: object
@@ -271,7 +271,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         humidity:
           type: object
@@ -284,7 +284,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
         water_level:
           type: object
@@ -297,7 +297,7 @@ components:
               description: The unit of the measurement
             status:
               type: string
-              description: Indicates wheter the measurement is currently broken or not
+              description: Indicates whether the measurement is currently broken or not
               enum: [ok, broken]
     MeasurementApiResponse:
       required:
