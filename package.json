@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "swagger project test"
+    "test": "mocha test/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -18,21 +18,23 @@
   },
   "homepage": "https://github.com/metaodi/tecdottir#readme",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.22.1",
-    "lodash": "^4.17.23",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-openapi-validator": "^5.4.0",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
     "moment": "^2.30.1",
-    "moment-timezone": "^0.5.46",
-    "pg": "^8.13.0",
-    "swagger-express-mw": "^0.7.0",
+    "moment-timezone": "^0.5.47",
+    "pg": "^8.13.1",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "mocha": "^11.0.1",
     "should": "^13.2.3",
     "sinon": "^19.0.2",
     "supertest": "^7.0.0"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   }
 }

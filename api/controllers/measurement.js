@@ -85,33 +85,33 @@ var keyMapping = {
 };
 
 function measurements(req, res) {
-  queryDatabase(pool, req.swagger.params)
+  queryDatabase(pool, req.params, req.query)
    .then(result => {
      res.json(result);
    }) 
 }
 
-async function queryDatabase(pool, params) {
-  var station = params.station.value;
-  var startDate = params.startDate.value;
-  var endDate = params.endDate.value;
-  var sort = params.sort.value || 'timestamp_cet desc';
+async function queryDatabase(pool, params, query) {
+  var station = params.station;
+  var startDate = query.startDate;
+  var endDate = query.endDate;
+  var sort = query.sort || 'timestamp_cet desc';
   // this is to avoid a BC-break, before introducing the sort value
   // the result was always sorted by `timestamp_cet asc`, but we want to 
   // use `timestamp_cet desc` as default value on Swagger UI
-  if (!params.sort.raw) {
+  if (!query.sort) {
       sort = 'timestamp_cet asc';
   }
-  var limit = (typeof params.limit.value !== 'undefined') ? params.limit.value : 500;
-  var offset = params.offset.value || 0;
+  var limit = (typeof query.limit !== 'undefined') ? parseInt(query.limit) : 500;
+  var offset = parseInt(query.offset) || 0;
 
   var queryObj = buildQuery(station, startDate, endDate, sort, limit, offset);
-  const {query, countQuery, queryParams, countParams} = queryObj;
+  const {query: sqlQuery, countQuery, queryParams, countParams} = queryObj;
 
   var client;
   try {
       client = await pool.connect()
-      const dbres = await client.query(query, queryParams);
+      const dbres = await client.query(sqlQuery, queryParams);
       const countRes = await client.query(countQuery, countParams);
       var container = _.map(dbres.rows, function(row) {
           return {
