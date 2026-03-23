@@ -41,7 +41,7 @@ jobs:
 
             echo "${station}: latest data at ${latest_timestamp} (${age_hours}h ago)"
 
-            if [ "$age_hours" -gt 12 ]; then
+            if [ "$age_hours" -gt 0 ]; then
               stale_stations="${stale_stations} ${station}"
             fi
           done
