@@ -41,7 +41,7 @@ jobs:
 
             echo "${station}: latest data at ${latest_timestamp} (${age_hours}h ago)"
 
-            if [ "$age_hours" -gt 0 ]; then
+            if [ "$age_hours" -gt 12 ]; then
               stale_stations="${stale_stations} ${station}"
             fi
           done
@@ -98,7 +98,7 @@ jobs:
           
           Affected station(s): **${STATIONS}**
           
-          Please check the data pipeline and the [Open Data Zurich source](https://data.stadt-zuerich.ch/dataset/sid_wapo_wetterstationen)."
+          Please check the [data pipeline](https://github.com/metaodi/tecdottir/actions/workflows/update_database.yml) and the [Open Data Zurich source](https://data.stadt-zuerich.ch/dataset/sid_wapo_wetterstationen)."
 
       - name: Close issue
         if: steps.check.outputs.stale == 'false' && steps.issue.outputs.exists == 'true'
