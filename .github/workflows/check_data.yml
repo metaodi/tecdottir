@@ -100,6 +100,16 @@ jobs:
           
           Please check the [data pipeline](https://github.com/metaodi/tecdottir/actions/workflows/update_database.yml) and the [Open Data Zurich source](https://data.stadt-zuerich.ch/dataset/sid_wapo_wetterstationen)."
 
+      - name: Comment on existing issue
+        if: steps.check.outputs.stale == 'true' && steps.issue.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATIONS: ${{ steps.check.outputs.stations }}
+        run: |
+          gh issue comment "${{ steps.issue.outputs.number }}" \
+            --repo "${{ github.repository }}" \
+            --body "Data is still stale for station(s): **${STATIONS}**. Please check the [data pipeline](https://github.com/metaodi/tecdottir/actions/workflows/update_database.yml) and the [Open Data Zurich source](https://data.stadt-zuerich.ch/dataset/sid_wapo_wetterstationen)."
+
       - name: Close issue
         if: steps.check.outputs.stale == 'false' && steps.issue.outputs.exists == 'true'
         env:
