@@ -1,0 +1,120 @@
+name: Check data freshness
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check_data:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Check latest data from API
+        id: check
+        run: |
+          stale_stations=""
+
+          for station in mythenquai tiefenbrunnen; do
+            response=$(curl -s "https://tecdottir.metaodi.ch/measurements/${station}?limit=1&sort=timestamp_cet%20desc")
+            ok=$(echo "$response" | jq -r '.ok')
+
+            if [ "$ok" != "true" ]; then
+              echo "API returned ok=false for ${station}"
+              stale_stations="${stale_stations} ${station}"
+              continue
+            fi
+
+            latest_timestamp=$(echo "$response" | jq -r '.result[0].timestamp // empty')
+
+            if [ -z "$latest_timestamp" ]; then
+              echo "No data available for ${station}"
+              stale_stations="${stale_stations} ${station}"
+              continue
+            fi
+
+            latest_epoch=$(date -d "$latest_timestamp" +%s)
+            now_epoch=$(date +%s)
+            age_hours=$(( (now_epoch - latest_epoch) / 3600 ))
+
+            echo "${station}: latest data at ${latest_timestamp} (${age_hours}h ago)"
+
+            if [ "$age_hours" -gt 12 ]; then
+              stale_stations="${stale_stations} ${station}"
+            fi
+          done
+
+          stale_stations=$(echo "$stale_stations" | xargs)
+
+          if [ -n "$stale_stations" ]; then
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+            echo "stations=${stale_stations}" >> "$GITHUB_OUTPUT"
+            echo "Data is stale for: ${stale_stations}"
+          else
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+            echo "All data is fresh"
+          fi
+
+      - name: Check for existing issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing=$(gh issue list \
+            --repo "${{ github.repository }}" \
+            --label "stale data" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')
+
+          if [ -n "$existing" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "number=${existing}" >> "$GITHUB_OUTPUT"
+            echo "Found existing issue #${existing}"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "No existing issue found"
+          fi
+
+      - name: Open issue
+        if: steps.check.outputs.stale == 'true' && steps.issue.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATIONS: ${{ steps.check.outputs.stations }}
+        run: |
+          gh label create "stale data" \
+            --repo "${{ github.repository }}" \
+            --description "Data from the API is older than 12 hours" \
+            --color "D93F0B" \
+            --force
+
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "Stale data: latest API data is older than 12 hours" \
+            --label "stale data" \
+            --body "The latest data from the tecdottir API is older than 12 hours.
+          
+          Affected station(s): **${STATIONS}**
+          
+          Please check the [data pipeline](https://github.com/metaodi/tecdottir/actions/workflows/update_database.yml) and the [Open Data Zurich source](https://data.stadt-zuerich.ch/dataset/sid_wapo_wetterstationen)."
+
+      - name: Comment on existing issue
+        if: steps.check.outputs.stale == 'true' && steps.issue.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATIONS: ${{ steps.check.outputs.stations }}
+        run: |
+          gh issue comment "${{ steps.issue.outputs.number }}" \
+            --repo "${{ github.repository }}" \
+            --body "Data is still stale for station(s): **${STATIONS}**. Please check the [data pipeline](https://github.com/metaodi/tecdottir/actions/workflows/update_database.yml) and the [Open Data Zurich source](https://data.stadt-zuerich.ch/dataset/sid_wapo_wetterstationen)."
+
+      - name: Close issue
+        if: steps.check.outputs.stale == 'false' && steps.issue.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue close "${{ steps.issue.outputs.number }}" \
+            --repo "${{ github.repository }}" \
+            --comment "Data is available again. Closing this issue automatically."
