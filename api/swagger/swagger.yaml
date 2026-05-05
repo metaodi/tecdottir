@@ -1,4 +1,4 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   version: "2.0.0"
   title: Tecdottir
@@ -6,345 +6,342 @@ info:
   license:
       name: MIT License, © Stefan Oderbolz 2026
       url: https://github.com/metaodi/tecdottir/blob/master/LICENSE.md
-host: tecdottir.metaodi.ch
-# basePath prefixes all resource paths 
-basePath: /
-schemes:
-  - https
-# format of bodies a client can send (Content-Type)
-consumes:
-  - application/json
-# format of the responses to the client (Accepts)
-produces:
-  - application/json
+servers:
+  - url: https://tecdottir.metaodi.ch
+    description: Production server
 tags:
   -
     name: measurements
     description: Measurement data
 paths:
   /measurements/{station}:
-    x-swagger-router-controller: measurement
     get:
       tags:
         - measurements
       description: Returns the measurements values of the specified station
-      # used as the method name of the controller
       operationId: measurements
       parameters:
         - name: station
           in: path
           description: The station of which the values should be returned
           required: true
-          type: string
-          enum: ["tiefenbrunnen", "mythenquai"]
+          schema:
+            type: string
+            enum: ["tiefenbrunnen", "mythenquai"]
         - name: startDate
           in: query
           description: "The start date after which the measurements should be returned. Format: YYYY-MM-DD"
           required: false
-          type: string
-          format: date
+          schema:
+            type: string
+            format: date
         - name: endDate
           in: query
           description: "The end date before which the measurements should be returned. Format: YYYY-MM-DD"
           required: false
-          type: string
-          format: date
+          schema:
+            type: string
+            format: date
         - name: sort
           in: query
           description: "Column(s) to sort by (followed by asc/desc), provide multiple columns separated by comma `,`"
           required: false
-          type: string
-          default: "timestamp_cet desc"
-          pattern: '^((timestamp_cet|timestamp_utc|air_temperature|water_temperature|wind_gust_max_10min|wind_speed_avg_10min|wind_force_avg_10min|wind_direction|windchill|barometric_pressure_qfe|precipitation|dew_point|global_radiation|humidity|water_level) ?(asc|desc)?,?)*$'
+          schema:
+            type: string
+            default: "timestamp_cet desc"
+            pattern: '^((timestamp_cet|timestamp_utc|air_temperature|water_temperature|wind_gust_max_10min|wind_speed_avg_10min|wind_force_avg_10min|wind_direction|windchill|barometric_pressure_qfe|precipitation|dew_point|global_radiation|humidity|water_level) ?(asc|desc)?,?)*$'
         - name: limit
           in: query
           description: "Number of rows to return (maximum: 1000)"
           required: false
-          type: integer
-          minimum: 0
-          default: 500
-          maximum: 1000
+          schema:
+            type: integer
+            minimum: 0
+            default: 500
+            maximum: 1000
         - name: offset
           in: query
           description: "Number of rows to offset (needed for pagination)"
           required: false
-          type: integer
-          minimum: 0
-          default: 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
       responses:
         "200":
           description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/MeasurementApiResponse"
-        # responses may fall through to errors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeasurementApiResponse"
         default:
           description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /stations:
-    x-swagger-router-controller: measurement
     get:
       tags:
         - measurements
       description: Returns the available stations
-      # used as the method name of the controller
       operationId: stations
       responses:
         "200":
           description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/StationApiResponse"
-        # responses may fall through to errors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StationApiResponse"
         default:
           description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /swagger:
-    x-swagger-pipe: swagger_raw
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 # complex objects have schema definitions
-definitions:
-  MeasurementResponse:
-    required:
-      - station
-      - timestamp
-      - values
-    properties:
-       station:
+components:
+  schemas:
+    MeasurementResponse:
+      required:
+        - station
+        - timestamp
+        - values
+      properties:
+         station:
+             type: string
+         timestamp:
            type: string
-       timestamp:
-         type: string
-         format: date-time
-       values:
-         $ref: "#/definitions/Measurement"
-  Measurement:
-    properties:
-      timestamp_cet:
-        type: object
-        properties:
-          value:
-            type: string
-            description: The date value in CET timezone
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      air_temperature:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      water_temperature:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      wind_gust_max_10min:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      wind_speed_avg_10min:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      wind_force_avg_10min:
-        type: object
-        properties:
-          value:
+           format: date-time
+         values:
+           $ref: "#/components/schemas/Measurement"
+    Measurement:
+      properties:
+        timestamp_cet:
+          type: object
+          properties:
+            value:
+              type: string
+              description: The date value in CET timezone
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        air_temperature:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        water_temperature:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        wind_gust_max_10min:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        wind_speed_avg_10min:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        wind_force_avg_10min:
+          type: object
+          properties:
+            value:
+              type: integer
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        wind_direction:
+          type: object
+          properties:
+            value:
+              type: integer
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        windchill:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        barometric_pressure_qfe:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        percipitation:
+          type: object
+          properties:
+            value:
+              type: integer
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        dew_point:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        global_radiation:
+          type: object
+          properties:
+            value:
+              type: integer
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        humidity:
+          type: object
+          properties:
+            value:
+              type: integer
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+        water_level:
+          type: object
+          properties:
+            value:
+              type: number
+              description: The value of the measurement
+            unit:
+              type: string
+              description: The unit of the measurement
+            status:
+              type: string
+              description: Indicates whether the measurement is currently broken or not
+              enum: [ok, broken]
+    MeasurementApiResponse:
+      required:
+        - ok
+        - total_count
+        - row_count
+        - result
+      properties:
+        ok:
+          type: boolean
+        total_count:
             type: integer
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      wind_direction:
-        type: object
-        properties:
-          value:
+        row_count:
             type: integer
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      windchill:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      barometric_pressure_qfe:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      percipitation:
-        type: object
-        properties:
-          value:
-            type: integer
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      dew_point:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      global_radiation:
-        type: object
-        properties:
-          value:
-            type: integer
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      humidity:
-        type: object
-        properties:
-          value:
-            type: integer
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-      water_level:
-        type: object
-        properties:
-          value:
-            type: number
-            description: The value of the measurement
-          unit:
-            type: string
-            description: The unit of the measurement
-          status:
-            type: string
-            description: Indicates wheter the measurement is currently broken or not
-            enum: [ok, broken]
-  MeasurementApiResponse:
-    required:
-      - ok
-      - total_count
-      - row_count
-      - result
-    properties:
-      ok:
-        type: boolean
-      total_count:
-          type: integer
-      row_count:
-          type: integer
-      result:
-        type: array
-        items:
-          $ref: "#/definitions/MeasurementResponse"
-  StationApiResponse:
-    required:
-      - ok
-      - result
-    properties:
-      ok:
-        type: boolean
-      result:
-        type: array
-        items:
-          $ref: "#/definitions/Station"
-  Station:
-    required:
-      - slug
-      - title
-    properties:
-      slug:
-        type: string
-      title:
-        type: string
-  ErrorResponse:
-    required:
-      - ok
-      - message
-    properties:
-      ok:
-        type: boolean
-      message:
-        type: string
+        result:
+          type: array
+          items:
+            $ref: "#/components/schemas/MeasurementResponse"
+    StationApiResponse:
+      required:
+        - ok
+        - result
+      properties:
+        ok:
+          type: boolean
+        result:
+          type: array
+          items:
+            $ref: "#/components/schemas/Station"
+    Station:
+      required:
+        - slug
+        - title
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+    ErrorResponse:
+      required:
+        - ok
+        - message
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: string
